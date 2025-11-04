@@ -1,5 +1,8 @@
+// lib/pages/splash_screen.dart
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:autisme/pages/home_page.dart'; // Pastikan impor ini benar
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,7 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
       const Duration(seconds: 3),
       () => Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const SplashScreen()),
+        // Mengarahkan ke HomePage (Dashboard)
+        MaterialPageRoute(builder: (context) => const HomePage()),
       ),
     );
   }
@@ -31,29 +35,21 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // 1. Logo Aplikasi
-            // Kita gunakan FlutterLogo sebagai placeholder.
-            // Ganti dengan Image.asset('assets/logo.png') jika Anda punya logo sendiri.
             const FlutterLogo(size: 120),
 
             const SizedBox(height: 24),
 
             // 2. Nama Aplikasi
             Text(
-              'autisme', // Nama dari pubspec.yaml
+              'NeuroSense', // Nama dari pubspec.yaml
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue.shade800, // Warna yang kuat dan modern
+                color: Colors.blue.shade800,
               ),
             ),
 
-            const SizedBox(height: 32),
-
-            // 3. Indikator Loading
-            CircularProgressIndicator(
-              // Memberi warna pada indikator loading
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade800),
-            ),
+            // Indikator loading dan SizedBox di bawahnya telah dihapus.
           ],
         ),
       ),
