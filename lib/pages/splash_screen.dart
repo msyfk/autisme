@@ -34,10 +34,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 1. Logo Aplikasi
-            const FlutterLogo(size: 120),
+            Image.asset(
+              'assets/images/logo.png',
+              width: 240,
+              height: 240,
+              fit: BoxFit.contain,
+            ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // 2. Nama Aplikasi
             Text(
