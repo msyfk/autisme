@@ -1,3 +1,5 @@
+// lib/pages/home_page.dart
+
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -5,12 +7,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Hapus AppBar dari sini
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        backgroundColor: Colors.blue.shade800,
-        foregroundColor: Colors.white,
-      ),
+      // 2. Body sekarang menjadi isi utama
       body: const Center(
         child: Text(
           'Selamat Datang di Halaman Utama!',
