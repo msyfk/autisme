@@ -1,12 +1,13 @@
 // lib/pages/screening_page.dart
 
 import 'package:flutter/material.dart';
-
-// Enum untuk jawaban Ya/Tidak
-enum Answer { ya, tidak }
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:autisme/models/question_model.dart';
 
 class ScreeningPage extends StatefulWidget {
-  const ScreeningPage({super.key});
+  final int childAgeMonths; // Menerima umur anak
+
+  const ScreeningPage({super.key, required this.childAgeMonths});
 
   @override
   State<ScreeningPage> createState() => _ScreeningPageState();
@@ -16,18 +17,39 @@ class _ScreeningPageState extends State<ScreeningPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Daftar pertanyaan (Ganti dengan pertanyaan Anda)
-  final List<String> _questions = [
-    'Apakah anak Anda jarang melakukan kontak mata saat diajak berbicara?',
-    'Apakah anak Anda kesulitan untuk memulai atau mempertahankan percakapan?',
-    'Apakah anak Anda menunjukkan minat yang sangat kuat pada satu topik tertentu?',
-    'Apakah anak Anda sering mengulang kata-kata atau frasa (ekolalia)?',
-    'Apakah anak Anda merasa terganggu dengan perubahan rutinitas kecil?',
-    // Tambahkan pertanyaan lain di sini
-  ];
+  List<ScreeningQuestion> _allQuestions = [];
+  List<ScreeningQuestion> _filteredQuestions = [];
+  bool _isLoading = true;
 
-  // Tempat untuk menyimpan jawaban (saat ini hanya untuk UI)
-  final Map<int, Answer?> _answers = {};
+  // Menyimpan jawaban: key = question ID, value = skor
+  final Map<int, int> _answers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuestions();
+  }
+
+  Future<void> _loadQuestions() async {
+    // 1. Load JSON dari assets
+    final String response = await rootBundle.loadString(
+      'assets/data/screening_data.json',
+    );
+
+    // 2. Parse ke objek Dart
+    final List<ScreeningQuestion> loadedQuestions = parseQuestions(response);
+
+    setState(() {
+      _allQuestions = loadedQuestions;
+
+      // 3. FILTER LOGIC: Ambil soal yang usianya <= usia anak
+      _filteredQuestions = _allQuestions
+          .where((q) => q.ageMonths <= widget.childAgeMonths)
+          .toList();
+
+      _isLoading = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -36,13 +58,12 @@ class _ScreeningPageState extends State<ScreeningPage> {
   }
 
   void _goToNextPage() {
-    if (_currentPage < _questions.length - 1) {
+    if (_currentPage < _filteredQuestions.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     } else {
-      // Jika sudah di pertanyaan terakhir, selesaikan tes
       _finishTest();
     }
   }
@@ -57,19 +78,21 @@ class _ScreeningPageState extends State<ScreeningPage> {
   }
 
   void _finishTest() {
-    // Tampilkan dialog hasil (Contoh Sederhana)
+    // Hitung total skor jika perlu
+    int totalScore = _answers.values.fold(0, (sum, item) => sum + item);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Tes Selesai'),
-        content: const Text(
-          'Terima kasih telah menyelesaikan tes screening. Hasil akan ditampilkan di sini.',
+        content: Text(
+          'Terima kasih. Total Skor: $totalScore\n(Logika diagnosa dapat ditambahkan di sini)',
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Tutup dialog
-              Navigator.of(context).pop(); // Kembali ke halaman dashboard
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             child: const Text('Selesai'),
           ),
@@ -80,6 +103,19 @@ class _ScreeningPageState extends State<ScreeningPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_filteredQuestions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Screening')),
+        body: const Center(
+          child: Text('Tidak ada pertanyaan untuk kategori usia ini.'),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Screening Test'),
@@ -87,80 +123,66 @@ class _ScreeningPageState extends State<ScreeningPage> {
         foregroundColor: Colors.white,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Indikator Pertanyaan (Contoh: 1/10)
+            // Progress bar
+            LinearProgressIndicator(
+              value: (_currentPage + 1) / _filteredQuestions.length,
+              backgroundColor: Colors.grey[200],
+              color: Colors.blue.shade800,
+            ),
+            const SizedBox(height: 16),
+
             Text(
-              'Pertanyaan ${_currentPage + 1}/${_questions.length}',
+              'Pertanyaan ${_currentPage + 1}/${_filteredQuestions.length}',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue.shade800,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Jawablah pertanyaan di bawah ini dengan jujur.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
-            ),
-            const SizedBox(height: 24),
 
-            // Konten Pertanyaan (PageView)
+            // Area Pertanyaan
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _questions.length,
+                physics:
+                    const NeverScrollableScrollPhysics(), // User harus klik tombol/opsi
+                itemCount: _filteredQuestions.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPage = index;
                   });
                 },
                 itemBuilder: (context, index) {
-                  return _buildQuestionCard(_questions[index], index);
+                  return _buildQuestionCard(_filteredQuestions[index]);
                 },
               ),
             ),
 
-            const SizedBox(height: 24),
-
-            // Tombol Navigasi (Kembali & Lanjut)
+            // Tombol Navigasi
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Tombol Kembali
                 TextButton(
-                  onPressed: _currentPage == 0
-                      ? null
-                      : _goToPreviousPage, // Nonaktifkan jika di halaman pertama
-                  child: Text(
-                    'Kembali',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _currentPage == 0
-                          ? Colors.grey
-                          : Colors.blue.shade800,
-                    ),
-                  ),
+                  onPressed: _currentPage == 0 ? null : _goToPreviousPage,
+                  child: const Text('Kembali'),
                 ),
-
-                // Tombol Lanjut
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade800,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
                   ),
-                  onPressed: _goToNextPage,
+                  // Tombol lanjut hanya aktif jika pertanyaan ini sudah dijawab
+                  onPressed:
+                      _answers.containsKey(_filteredQuestions[_currentPage].id)
+                      ? _goToNextPage
+                      : null,
                   child: Text(
-                    // Ubah teks tombol di pertanyaan terakhir
-                    _currentPage == _questions.length - 1
+                    _currentPage == _filteredQuestions.length - 1
                         ? 'Selesai'
                         : 'Lanjut',
-                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],
@@ -171,41 +193,47 @@ class _ScreeningPageState extends State<ScreeningPage> {
     );
   }
 
-  // Widget untuk membuat kartu pertanyaan
-  Widget _buildQuestionCard(String question, int index) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Membuat kartu pas dengan konten
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(question, style: const TextStyle(fontSize: 18, height: 1.5)),
-            const SizedBox(height: 24),
-            // Pilihan Jawaban
-            RadioListTile<Answer>(
-              title: const Text('Ya'),
-              value: Answer.ya,
-              groupValue: _answers[index],
-              onChanged: (Answer? value) {
-                setState(() {
-                  _answers[index] = value;
-                });
-              },
-            ),
-            RadioListTile<Answer>(
-              title: const Text('Tidak'),
-              value: Answer.tidak,
-              groupValue: _answers[index],
-              onChanged: (Answer? value) {
-                setState(() {
-                  _answers[index] = value;
-                });
-              },
-            ),
-          ],
+  Widget _buildQuestionCard(ScreeningQuestion question) {
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Menampilkan Aspek dan Bagian
+              Text(
+                '${question.aspect} - ${question.section}',
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                question.question,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Menampilkan Opsi Jawaban Dinamis
+              ...question.options.map((option) {
+                return RadioListTile<int>(
+                  title: Text(option.text),
+                  value: option.score,
+                  groupValue: _answers[question.id],
+                  activeColor: Colors.blue.shade800,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _answers[question.id] = value!;
+                    });
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "aspect": "ASPEK INTERAKSI SOSIAL",
+    "section": "Bagian 1: Persepsi terhadap Wajah-wajah",
+    "question": "Menunjukkan senyum sosial",
+    "age_months": 2,
+    "options": [
+      { "text": "Anak selalu menunjukkan senyum sosial", "score": 3 },
+      { "text": "Anak sering menunjukkan senyum sosial", "score": 2 },
+      { "text": "Anak kadang menunjukkan senyum sosial", "score": 1 },
+      { "text": "Anak tidak menunjukkan senyum sosial", "score": 0 }
+    ]
+  },
+  {
+    "id": 2,
+    "aspect": "ASPEK INTERAKSI SOSIAL",
+    "section": "Bagian 1: Persepsi terhadap Wajah-wajah",
+    "question": "Memperhatikan wajah-wajah baru",
+    "age_months": 3,
+    "options": [
+      { "text": "Anak selalu memperhatikan wajah-wajah baru", "score": 3 },
+      { "text": "Anak sering memperhatikan wajah-wajah baru", "score": 2 },
+      { "text": "Anak kadang memperhatikan wajah-wajah baru", "score": 1 },
+      {
+        "text": "Anak tidak/ tidak acuh dalam memperhatikan wajah-wajah baru",
+        "score": 0
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "aspect": "ASPEK INTERAKSI SOSIAL",
+    "section": "Bagian 1: Persepsi terhadap Wajah-wajah",
+    "question": "Menunjukkan rasa kepada pengasuhnya",
+    "age_months": 6,
+    "options": [
+      { "text": "Anak mampu menunjukkan rasa kepada pengasuhnya", "score": 3 },
+      {
+        "text": "Anak cukup mampu menunjukkan rasa kepada pengasuhnya",
+        "score": 2
+      },
+      {
+        "text": "Anak kurang mampu menunjukkan rasa kepada pengasuhnya",
+        "score": 1
+      },
+      {
+        "text": "Anak belum mampu menunjukkan rasa kepada pengasuhnya",
+        "score": 0
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "aspect": "ASPEK KOMUNIKASI",
+    "section": "Bagian 1: Komunikasi Non Verbal",
+    "question": "Menggunakan gestur sederhana seperti melambaikan tangan atau menggelengkan kepala",
+    "age_months": 12,
+    "options": [
+      { "text": "Anak mampu menggunakan gestur sederhana", "score": 3 },
+      { "text": "Anak cukup mampu menggunakan gestur sederhana", "score": 2 },
+      { "text": "Anak kurang mampu menggunakan gestur sederhana", "score": 1 },
+      { "text": "Anak belum mampu menggunakan gestur sederhana", "score": 0 }
+    ]
+  },
+  {
+    "id": 5,
+    "aspect": "ASPEK PERILAKU",
+    "section": "Bagian 2: Minat yang Sempit dan Terbatas",
+    "question": "Mengembangkan minat yang intens dalam subyek terbatas",
+    "age_months": 36,
+    "options": [
+      {
+        "text": "Anak tidak memiliki minat yang intens dalam subyek terbatas",
+        "score": 0
+      },
+      {
+        "text": "Anak kadang memiliki minat yang intens dalam subyek terbatas",
+        "score": 1
+      },
+      {
+        "text": "Anak memiliki minat yang intens dalam subyek terbatas",
+        "score": 2
+      }
+    ]
+  }
+]
