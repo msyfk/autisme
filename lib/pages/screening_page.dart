@@ -17,7 +17,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  List<ScreeningQuestion> _allQuestions = [];
+  // HAPUS _allQuestions KARENA TIDAK DIPAKAI
   List<ScreeningQuestion> _filteredQuestions = [];
   bool _isLoading = true;
 
@@ -36,7 +36,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
       'assets/data/screening_data.json',
     );
 
-    // 2. Parse ke objek Dart
+    // 2. Parse ke objek Dart (lokal variabel saja)
     final List<ScreeningQuestion> loadedQuestions = parseQuestions(response);
 
     // 3. FILTER LOGIC: Ambil soal yang usianya <= usia anak
@@ -70,7 +70,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
         if (selectedQuestions.length >= 20) break;
 
         var groupQuestions = groups[key]!;
-        // Ambil soal pertama dari grup tersebut (bisa diubah jadi random jika mau variasi)
+        // Ambil soal pertama dari grup tersebut
         var q = groupQuestions[0];
 
         selectedQuestions.add(q);
@@ -90,12 +90,12 @@ class _ScreeningPageState extends State<ScreeningPage> {
         }
       }
 
-      // Opsional: Urutkan kembali berdasarkan ID agar urutan soal logis
+      // Urutkan kembali berdasarkan ID agar urutan soal logis
       selectedQuestions.sort((a, b) => a.id.compareTo(b.id));
     }
 
     setState(() {
-      _allQuestions = loadedQuestions;
+      // Kita hanya simpan hasil filter ke state
       _filteredQuestions = selectedQuestions;
       _isLoading = false;
     });
