@@ -39,14 +39,64 @@ class _ScreeningPageState extends State<ScreeningPage> {
     // 2. Parse ke objek Dart
     final List<ScreeningQuestion> loadedQuestions = parseQuestions(response);
 
+    // 3. FILTER LOGIC: Ambil soal yang usianya <= usia anak
+    List<ScreeningQuestion> ageAppropriate = loadedQuestions
+        .where((q) => q.ageMonths <= widget.childAgeMonths)
+        .toList();
+
+    List<ScreeningQuestion> selectedQuestions = [];
+
+    // 4. LIMIT LOGIC: Maksimal 20 Pertanyaan & Wajib mewakili setiap bagian
+    if (ageAppropriate.length <= 20) {
+      selectedQuestions = ageAppropriate;
+    } else {
+      // Jika lebih dari 20, kita pilih secara cerdas agar semua aspek/bagian terwakili
+
+      // Grouping berdasarkan key unik "Aspek - Bagian"
+      Map<String, List<ScreeningQuestion>> groups = {};
+      for (var q in ageAppropriate) {
+        String key = "${q.aspect}-${q.section}";
+        if (!groups.containsKey(key)) {
+          groups[key] = [];
+        }
+        groups[key]!.add(q);
+      }
+
+      // Langkah 4a: Ambil minimal 1 soal dari setiap grup (Bagian)
+      List<String> groupKeys = groups.keys.toList();
+      Set<int> selectedIds = {};
+
+      for (var key in groupKeys) {
+        if (selectedQuestions.length >= 20) break;
+
+        var groupQuestions = groups[key]!;
+        // Ambil soal pertama dari grup tersebut (bisa diubah jadi random jika mau variasi)
+        var q = groupQuestions[0];
+
+        selectedQuestions.add(q);
+        selectedIds.add(q.id);
+      }
+
+      // Langkah 4b: Jika masih kurang dari 20, isi dengan sisa soal yang belum terpilih
+      if (selectedQuestions.length < 20) {
+        List<ScreeningQuestion> remaining = ageAppropriate
+            .where((q) => !selectedIds.contains(q.id))
+            .toList();
+
+        // Ambil sisa kuota untuk mencapai 20
+        int slotsNeeded = 20 - selectedQuestions.length;
+        for (int i = 0; i < slotsNeeded && i < remaining.length; i++) {
+          selectedQuestions.add(remaining[i]);
+        }
+      }
+
+      // Opsional: Urutkan kembali berdasarkan ID agar urutan soal logis
+      selectedQuestions.sort((a, b) => a.id.compareTo(b.id));
+    }
+
     setState(() {
       _allQuestions = loadedQuestions;
-
-      // 3. FILTER LOGIC: Ambil soal yang usianya <= usia anak
-      _filteredQuestions = _allQuestions
-          .where((q) => q.ageMonths <= widget.childAgeMonths)
-          .toList();
-
+      _filteredQuestions = selectedQuestions;
       _isLoading = false;
     });
   }
@@ -78,7 +128,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
   }
 
   void _finishTest() {
-    // Hitung total skor jika perlu
+    // Hitung total skor
     int totalScore = _answers.values.fold(0, (sum, item) => sum + item);
 
     showDialog(
@@ -91,8 +141,8 @@ class _ScreeningPageState extends State<ScreeningPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Tutup dialog
+              Navigator.of(context).pop(); // Kembali ke menu utama
             },
             child: const Text('Selesai'),
           ),
