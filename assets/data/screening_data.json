@@ -6,10 +6,10 @@
     "question": "Menunjukkan senyum sosial",
     "age_months": 2,
     "options": [
-      { "text": "Anak selalu menunjukkan senyum sosial", "score": 4 },
-      { "text": "Anak sering menunjukkan senyum sosial", "score": 3 },
-      { "text": "Anak kadang menunjukkan senyum sosial", "score": 2 },
-      { "text": "Anak tidak menunjukkan senyum sosial", "score": 1 }
+      { "text": "Anak selalu menunjukkan senyum sosial", "score": 1 },
+      { "text": "Anak sering menunjukkan senyum sosial", "score": 2 },
+      { "text": "Anak kadang menunjukkan senyum sosial", "score": 3 },
+      { "text": "Anak tidak menunjukkan senyum sosial", "score": 4 }
     ]
   },
   {
@@ -19,12 +19,12 @@
     "question": "Memperhatikan wajah-wajah baru",
     "age_months": 3,
     "options": [
-      { "text": "Anak selalu memperhatikan wajah-wajah baru", "score": 4 },
-      { "text": "Anak sering memperhatikan wajah-wajah baru", "score": 3 },
-      { "text": "Anak kadang memperhatikan wajah-wajah baru", "score": 2 },
+      { "text": "Anak selalu memperhatikan wajah-wajah baru", "score": 1 },
+      { "text": "Anak sering memperhatikan wajah-wajah baru", "score": 2 },
+      { "text": "Anak kadang memperhatikan wajah-wajah baru", "score": 3 },
       {
         "text": "Anak tidak/ tidak acuh dalam memperhatikan wajah-wajah baru",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -35,18 +35,18 @@
     "question": "Menunjukkan rasa kepada pengasuhnya",
     "age_months": 6,
     "options": [
-      { "text": "Anak mampu menunjukkan rasa kepada pengasuhnya", "score": 4 },
+      { "text": "Anak mampu menunjukkan rasa kepada pengasuhnya", "score": 1 },
       {
         "text": "Anak cukup mampu menunjukkan rasa kepada pengasuhnya",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menunjukkan rasa kepada pengasuhnya",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menunjukkan rasa kepada pengasuhnya",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menunjukkan rasa kepada pengasuhnya",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -59,19 +59,19 @@
     "options": [
       {
         "text": "Anak merespon normal tertawa atau menjerit dengan stimulus yang jelas",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak jarang merespon tertawa atau menjerit dengan stimulus yang jelas",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang merespon tertawa dengan menjerit dengan stimulus yang jelas",
         "score": 2
       },
       {
+        "text": "Anak kurang merespon tertawa dengan menjerit dengan stimulus yang jelas",
+        "score": 3
+      },
+      {
         "text": "Anak merespon tertawa atau menjerit dengan stimulus yang tidak jelas",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -82,10 +82,10 @@
     "question": "Menunjukkan emosi wajah (senang/marah/sedih/terkejut)",
     "age_months": 9,
     "options": [
-      { "text": "Anak mampu menunjukkan emosi wajah", "score": 4 },
-      { "text": "Anak cukup mampu menunjukkan emosi wajah", "score": 3 },
-      { "text": "Anak kurang mampu menunjukkan emosi wajah", "score": 2 },
-      { "text": "Anak belum mampu menunjukkan emosi wajah", "score": 1 }
+      { "text": "Anak mampu menunjukkan emosi wajah", "score": 1 },
+      { "text": "Anak cukup mampu menunjukkan emosi wajah", "score": 2 },
+      { "text": "Anak kurang mampu menunjukkan emosi wajah", "score": 3 },
+      { "text": "Anak belum mampu menunjukkan emosi wajah", "score": 4 }
     ]
   },
   {
@@ -97,19 +97,19 @@
     "options": [
       {
         "text": "Anak mampu menunjukkan respons terhadap tampilan emosional orang lain",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu menunjukkan respons terhadap tampilan emosional orang lain",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menunjukkan respons terhadap tampilan emosional orang lain",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menunjukkan respons terhadap tampilan emosional orang lain",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menunjukkan respons terhadap tampilan emosional orang lain",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -120,18 +120,18 @@
     "question": "Melakukan imitasi objek dan imitasi gestur",
     "age_months": 18,
     "options": [
-      { "text": "Anak mampu imitasi objek dan imitasi gestur", "score": 4 },
+      { "text": "Anak mampu imitasi objek dan imitasi gestur", "score": 1 },
       {
         "text": "Anak cukup mampu imitasi objek dan imitasi gestur",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu imitasi objek dan imitasi gestur",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu imitasi objek dan imitasi gestur",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu imitasi objek dan imitasi gestur",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -142,10 +142,10 @@
     "question": "Meraih suatu benda",
     "age_months": 6,
     "options": [
-      { "text": "Anak mampu meraih suatu benda", "score": 4 },
-      { "text": "Anak cukup mampu meraih suatu benda", "score": 3 },
-      { "text": "Anak kurang mampu meraih suatu benda", "score": 2 },
-      { "text": "Anak belum mampu meraih suatu benda", "score": 1 }
+      { "text": "Anak mampu meraih suatu benda", "score": 1 },
+      { "text": "Anak cukup mampu meraih suatu benda", "score": 2 },
+      { "text": "Anak kurang mampu meraih suatu benda", "score": 3 },
+      { "text": "Anak belum mampu meraih suatu benda", "score": 4 }
     ]
   },
   {
@@ -157,19 +157,19 @@
     "options": [
       {
         "text": "Anak selalu tertarik pada permainan sederhana seperti cilukba",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak sering tertarik pada permainan sederhana seperti cilukba",
-        "score": 3
-      },
-      {
-        "text": "Anak kadang tertarik pada permainan sederhana seperti cilukba",
         "score": 2
       },
       {
+        "text": "Anak kadang tertarik pada permainan sederhana seperti cilukba",
+        "score": 3
+      },
+      {
         "text": "Anak tidak tertarik pada permainan sederhana seperti cilukba",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -182,19 +182,19 @@
     "options": [
       {
         "text": "Anak mampu menunjukkan gestur menunjuk dan menunjukkan",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu menunjukkan gestur menunjuk dan menunjukkan",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menunjukkan gestur menunjuk dan menunjukkan",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menunjukkan gestur menunjuk dan menunjukkan",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menunjukkan gestur menunjuk dan menunjukkan",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -205,10 +205,10 @@
     "question": "Bermain dengan teman sebaya",
     "age_months": 36,
     "options": [
-      { "text": "Anak mampu bermain dengan teman sebaya", "score": 4 },
-      { "text": "Anak cukup mampu bermain dengan teman sebaya", "score": 3 },
-      { "text": "Anak kurang mampu bermain dengan teman sebaya", "score": 2 },
-      { "text": "Anak belum mampu bermain dengan teman sebaya", "score": 1 }
+      { "text": "Anak mampu bermain dengan teman sebaya", "score": 1 },
+      { "text": "Anak cukup mampu bermain dengan teman sebaya", "score": 2 },
+      { "text": "Anak kurang mampu bermain dengan teman sebaya", "score": 3 },
+      { "text": "Anak belum mampu bermain dengan teman sebaya", "score": 4 }
     ]
   },
   {
@@ -220,19 +220,19 @@
     "options": [
       {
         "text": "Anak selalu tertarik untuk terlibat dengan permainan bersama teman",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak sering tertarik untuk terlibat dengan permainan bersama teman",
-        "score": 3
-      },
-      {
-        "text": "Anak kadang tertarik untuk terlibat dengan permainan bersama teman",
         "score": 2
       },
       {
+        "text": "Anak kadang tertarik untuk terlibat dengan permainan bersama teman",
+        "score": 3
+      },
+      {
         "text": "Anak tidak tertarik untuk terlibat dengan permainan bersama teman",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -243,10 +243,10 @@
     "question": "Bermain peran",
     "age_months": 48,
     "options": [
-      { "text": "Anak mampu bermain peran", "score": 4 },
-      { "text": "Anak cukup mampu bermain peran", "score": 3 },
-      { "text": "Anak kurang mampu bermain peran", "score": 2 },
-      { "text": "Anak belum mampu bermain peran", "score": 1 }
+      { "text": "Anak mampu bermain peran", "score": 1 },
+      { "text": "Anak cukup mampu bermain peran", "score": 2 },
+      { "text": "Anak kurang mampu bermain peran", "score": 3 },
+      { "text": "Anak belum mampu bermain peran", "score": 4 }
     ]
   },
   {
@@ -258,19 +258,19 @@
     "options": [
       {
         "text": "Anak mampu menari, menyanyi, atau melakukan sesuatu terhadap pengasuh",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu menari, menyanyi, atau melakukan sesuatu terhadap pengasuh",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menari, menyanyi, atau melakukan sesuatu terhadap pengasuh",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menari, menyanyi, atau melakukan sesuatu terhadap pengasuh",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menari, menyanyi, atau melakukan sesuatu terhadap pengasuh",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -281,10 +281,10 @@
     "question": "Kontak mata",
     "age_months": 2,
     "options": [
-      { "text": "Anak mampu melakukan kontak mata", "score": 4 },
-      { "text": "Anak cukup mampu melakukan kontak mata", "score": 3 },
-      { "text": "Anak kurang mampu melakukan kontak mata", "score": 2 },
-      { "text": "Anak belum mampu melakukan kontak mata", "score": 1 }
+      { "text": "Anak mampu melakukan kontak mata", "score": 1 },
+      { "text": "Anak cukup mampu melakukan kontak mata", "score": 2 },
+      { "text": "Anak kurang mampu melakukan kontak mata", "score": 3 },
+      { "text": "Anak belum mampu melakukan kontak mata", "score": 4 }
     ]
   },
   {
@@ -294,10 +294,10 @@
     "question": "Mengamati benda yang bergerak",
     "age_months": 3,
     "options": [
-      { "text": "Anak mampu mengamati benda yang bergerak", "score": 4 },
-      { "text": "Anak cukup mampu mengamati benda yang bergerak", "score": 3 },
-      { "text": "Anak kurang mampu mengamati benda yang bergerak", "score": 2 },
-      { "text": "Anak belum mampu mengamati benda yang bergerak", "score": 1 }
+      { "text": "Anak mampu mengamati benda yang bergerak", "score": 1 },
+      { "text": "Anak cukup mampu mengamati benda yang bergerak", "score": 2 },
+      { "text": "Anak kurang mampu mengamati benda yang bergerak", "score": 3 },
+      { "text": "Anak belum mampu mengamati benda yang bergerak", "score": 4 }
     ]
   },
   {
@@ -307,18 +307,18 @@
     "question": "Respon terhadap panggilan nama",
     "age_months": 9,
     "options": [
-      { "text": "Anak mampu merespon terhadap panggilan nama", "score": 4 },
+      { "text": "Anak mampu merespon terhadap panggilan nama", "score": 1 },
       {
         "text": "Anak cukup mampu merespon terhadap panggilan nama",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu merespon terhadap panggilan nama",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu merespon terhadap panggilan nama",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu merespon terhadap panggilan nama",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -329,10 +329,10 @@
     "question": "Mengikuti arah pandangan pengasuh",
     "age_months": 10,
     "options": [
-      { "text": "Anak mampu mengikuti arah pandangan pengasuh", "score": 4 },
-      { "text": "Anak cukup mengikuti arah pandangan pengasuh", "score": 3 },
-      { "text": "Anak kurang mengikuti arah pandangan pengasuh", "score": 2 },
-      { "text": "Anak belum mengikuti arah pandangan pengasuh", "score": 1 }
+      { "text": "Anak mampu mengikuti arah pandangan pengasuh", "score": 1 },
+      { "text": "Anak cukup mengikuti arah pandangan pengasuh", "score": 2 },
+      { "text": "Anak kurang mengikuti arah pandangan pengasuh", "score": 3 },
+      { "text": "Anak belum mengikuti arah pandangan pengasuh", "score": 4 }
     ]
   },
   {
@@ -344,19 +344,19 @@
     "options": [
       {
         "text": "Anak mampu melakukan tatapan bergantian antara objek dan orang",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu melakukan tatapan bergantian antara objek dan orang",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu melakukan tatapan bergantian antara objek dan orang",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu melakukan tatapan bergantian antara objek dan orang",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu melakukan tatapan bergantian antara objek dan orang",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -369,19 +369,19 @@
     "options": [
       {
         "text": "Anak mampu menunjukkan rasa cemas jika berpisah dan bertemu orang asing",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu menunjukkan rasa cemas jika berpisah dan bertemu orang asing",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menunjukkan rasa cemas jika berpisah dan bertemu orang asing",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menunjukkan rasa cemas jika berpisah dan bertemu orang asing",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menunjukkan rasa cemas jika berpisah dan bertemu orang asing",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -394,19 +394,19 @@
     "options": [
       {
         "text": "Anak tidak tertarik pada benda tidak bergerak/bukan animasi",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang tertarik pada benda tidak bergerak/bukan animasi",
-        "score": 3
-      },
-      {
-        "text": "Anak sering tertarik pada benda tidak bergerak/bukan animasi",
         "score": 2
       },
       {
+        "text": "Anak sering tertarik pada benda tidak bergerak/bukan animasi",
+        "score": 3
+      },
+      {
         "text": "Anak selalu tertarik pada benda tidak bergerak/bukan animasi",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -419,15 +419,15 @@
     "options": [
       {
         "text": "Anak terbiasa terhadap sentuhan atau kedekatan sosial",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup terbiasa terhadap sentuhan atau kedekatan sosial",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak kurang terbiasa terhadap sentuhan atau kedekatan sosial",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -438,10 +438,10 @@
     "question": "Menggunakan gestur sederhana seperti melambaikan tangan atau menggelengkan kepala",
     "age_months": 12,
     "options": [
-      { "text": "Anak mampu menggunakan gestur sederhana", "score": 4 },
-      { "text": "Anak cukup mampu menggunakan gestur sederhana", "score": 3 },
-      { "text": "Anak kurang mampu menggunakan gestur sederhana", "score": 2 },
-      { "text": "Anak belum mampu menggunakan gestur sederhana", "score": 1 }
+      { "text": "Anak mampu menggunakan gestur sederhana", "score": 1 },
+      { "text": "Anak cukup mampu menggunakan gestur sederhana", "score": 2 },
+      { "text": "Anak kurang mampu menggunakan gestur sederhana", "score": 3 },
+      { "text": "Anak belum mampu menggunakan gestur sederhana", "score": 4 }
     ]
   },
   {
@@ -451,18 +451,18 @@
     "question": "Menarik perhatian melalui action",
     "age_months": 7,
     "options": [
-      { "text": "Anak mampu menarik perhatian melalui action", "score": 4 },
+      { "text": "Anak mampu menarik perhatian melalui action", "score": 1 },
       {
         "text": "Anak cukup mampu menarik perhatian melalui action",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu menarik perhatian melalui action",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu menarik perhatian melalui action",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu menarik perhatian melalui action",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -473,18 +473,18 @@
     "question": "Melakukan Gestur Menunjuk/Pointing",
     "age_months": 12,
     "options": [
-      { "text": "Anak mampu melakukan gestur menunjuk/pointing", "score": 4 },
+      { "text": "Anak mampu melakukan gestur menunjuk/pointing", "score": 1 },
       {
         "text": "Anak cukup mampu melakukan gestur menunjuk/pointing",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu melakukan gestur menunjuk/pointing",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu melakukan gestur menunjuk/pointing",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu melakukan gestur menunjuk/pointing",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -495,18 +495,18 @@
     "question": "Melakukan Gestur Menunjukkan/Showing",
     "age_months": 12,
     "options": [
-      { "text": "Anak mampu melakukan gestur menunjukkan/showing", "score": 4 },
+      { "text": "Anak mampu melakukan gestur menunjukkan/showing", "score": 1 },
       {
         "text": "Anak cukup mampu melakukan gestur menunjukkan/showing",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu melakukan gestur menunjukkan/showing",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu melakukan gestur menunjukkan/showing",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu melakukan gestur menunjukkan/showing",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -519,19 +519,19 @@
     "options": [
       {
         "text": "Anak mampu mengalihkan padangan dari benda ke pengasuh ketika meminta pertolongan",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak cukup mampu mengalihkan padangan dari benda ke pengasuh ketika meminta pertolongan",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu mengalihkan padangan dari benda ke pengasuh ketika meminta pertolongan",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu mengalihkan padangan dari benda ke pengasuh ketika meminta pertolongan",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu mengalihkan padangan dari benda ke pengasuh ketika meminta pertolongan",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -542,10 +542,10 @@
     "question": "Meminta sesuatu",
     "age_months": 18,
     "options": [
-      { "text": "Anak mampu meminta sesuatu", "score": 4 },
-      { "text": "Anak cukup mampu meminta sesuatu", "score": 3 },
-      { "text": "Anak kurang mampu meminta sesuatu", "score": 2 },
-      { "text": "Anak belum mampu meminta sesuatu", "score": 1 }
+      { "text": "Anak mampu meminta sesuatu", "score": 1 },
+      { "text": "Anak cukup mampu meminta sesuatu", "score": 2 },
+      { "text": "Anak kurang mampu meminta sesuatu", "score": 3 },
+      { "text": "Anak belum mampu meminta sesuatu", "score": 4 }
     ]
   },
   {
@@ -555,10 +555,10 @@
     "question": "Memprotes (jika sesuatu tidak sesuai dengan keinginan mereka)",
     "age_months": 36,
     "options": [
-      { "text": "Anak mampu memprotes", "score": 4 },
-      { "text": "Anak cukup mampu memprotes", "score": 3 },
-      { "text": "Anak kurang mampu memprotes", "score": 2 },
-      { "text": "Anak belum mampu memprotes", "score": 1 }
+      { "text": "Anak mampu memprotes", "score": 1 },
+      { "text": "Anak cukup mampu memprotes", "score": 2 },
+      { "text": "Anak kurang mampu memprotes", "score": 3 },
+      { "text": "Anak belum mampu memprotes", "score": 4 }
     ]
   },
   {
@@ -568,10 +568,10 @@
     "question": "Menunjukkan suara vokal",
     "age_months": 2,
     "options": [
-      { "text": "Anak mampu menunjukkan suara vokal", "score": 4 },
-      { "text": "Anak cukup mampu menunjukkan suara vokal", "score": 3 },
-      { "text": "Anak kurang mampu menunjukkan suara vokal", "score": 2 },
-      { "text": "Anak belum mampu menunjukkan suara vokal", "score": 1 }
+      { "text": "Anak mampu menunjukkan suara vokal", "score": 1 },
+      { "text": "Anak cukup mampu menunjukkan suara vokal", "score": 2 },
+      { "text": "Anak kurang mampu menunjukkan suara vokal", "score": 3 },
+      { "text": "Anak belum mampu menunjukkan suara vokal", "score": 4 }
     ]
   },
   {
@@ -581,10 +581,10 @@
     "question": "Respon pada suara keras",
     "age_months": 3,
     "options": [
-      { "text": "Anak merasa biasa pada suara keras", "score": 4 },
+      { "text": "Anak merasa biasa pada suara keras", "score": 1 },
       {
         "text": "Anak tidak merespon atau merespon tidak biasa pada suara keras",
-        "score": 3
+        "score": 2
       }
     ]
   },
@@ -595,10 +595,10 @@
     "question": "Mengeluarkan suara (misal aaa)",
     "age_months": 4,
     "options": [
-      { "text": "Anak mampu mengeluarkan suara", "score": 4 },
-      { "text": "Anak cukup mampu mengeluarkan suara", "score": 3 },
-      { "text": "Anak kurang mampu mengeluarkan suara", "score": 2 },
-      { "text": "Anak belum mampu mengeluarkan suara", "score": 1 }
+      { "text": "Anak mampu mengeluarkan suara", "score": 1 },
+      { "text": "Anak cukup mampu mengeluarkan suara", "score": 2 },
+      { "text": "Anak kurang mampu mengeluarkan suara", "score": 3 },
+      { "text": "Anak belum mampu mengeluarkan suara", "score": 4 }
     ]
   },
   {
@@ -608,10 +608,10 @@
     "question": "Mengoceh",
     "age_months": 9,
     "options": [
-      { "text": "Anak mampu dan banyak mengoceh", "score": 4 },
-      { "text": "Anak cukup mampu dan cukup banyak mengoceh", "score": 3 },
-      { "text": "Anak kurang mampu dan kurang banyak mengoceh", "score": 2 },
-      { "text": "Anak belum mampu dan tidak mengoceh", "score": 1 }
+      { "text": "Anak mampu dan banyak mengoceh", "score": 1 },
+      { "text": "Anak cukup mampu dan cukup banyak mengoceh", "score": 2 },
+      { "text": "Anak kurang mampu dan kurang banyak mengoceh", "score": 3 },
+      { "text": "Anak belum mampu dan tidak mengoceh", "score": 4 }
     ]
   },
   {
@@ -621,10 +621,10 @@
     "question": "Mengucapkan kata",
     "age_months": 12,
     "options": [
-      { "text": "Anak mampu mengucapkan kata", "score": 4 },
-      { "text": "Anak cukup mampu mengucapkan kata", "score": 3 },
-      { "text": "Anak kurang mampu mengucapkan kata", "score": 2 },
-      { "text": "Anak belum mampu mengucapkan kata", "score": 1 }
+      { "text": "Anak mampu mengucapkan kata", "score": 1 },
+      { "text": "Anak cukup mampu mengucapkan kata", "score": 2 },
+      { "text": "Anak kurang mampu mengucapkan kata", "score": 3 },
+      { "text": "Anak belum mampu mengucapkan kata", "score": 4 }
     ]
   },
   {
@@ -634,18 +634,18 @@
     "question": "Kontak sosial",
     "age_months": 12,
     "options": [
-      { "text": "Anak mampu dan sering melakukan kontak sosial", "score": 4 },
+      { "text": "Anak mampu dan sering melakukan kontak sosial", "score": 1 },
       {
         "text": "Anak cukup mampu dan cukup sering melakukan kontak sosial",
-        "score": 3
-      },
-      {
-        "text": "Anak kurang mampu dan jarang melakukan kontak sosial",
         "score": 2
       },
       {
+        "text": "Anak kurang mampu dan jarang melakukan kontak sosial",
+        "score": 3
+      },
+      {
         "text": "Anak belum mampu dan tidak melakukan kontak sosial",
-        "score": 1
+        "score": 4
       }
     ]
   },
@@ -658,15 +658,15 @@
     "options": [
       {
         "text": "Anak tidak mengulang berulang kali jika meminta sesuatu",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang mengulang berulang kali jika meminta sesuatu",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak sering mengulang berulang kali jika meminta sesuatu",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -677,9 +677,9 @@
     "question": "Rangkaian suku kata yang tidak biasa",
     "age_months": 36,
     "options": [
-      { "text": "Rangkaian suku kata anak normal", "score": 4 },
-      { "text": "Rangkaian suku kata anak cukup normal", "score": 3 },
-      { "text": "Rangkaian suku kata anak tidak biasa dan teracak", "score": 2 }
+      { "text": "Rangkaian suku kata anak normal", "score": 1 },
+      { "text": "Rangkaian suku kata anak cukup normal", "score": 2 },
+      { "text": "Rangkaian suku kata anak tidak biasa dan teracak", "score": 3 }
     ]
   },
   {
@@ -689,9 +689,9 @@
     "question": "Irama/nada bicara yang tidak biasa",
     "age_months": 36,
     "options": [
-      { "text": "Irama/nada bicara anak normal", "score": 4 },
-      { "text": "Irama/nada bicara anak cukup normal", "score": 3 },
-      { "text": "Irama/nada bicara anak kurang tepat", "score": 2 }
+      { "text": "Irama/nada bicara anak normal", "score": 1 },
+      { "text": "Irama/nada bicara anak cukup normal", "score": 2 },
+      { "text": "Irama/nada bicara anak kurang tepat", "score": 3 }
     ]
   },
   {
@@ -701,9 +701,9 @@
     "question": "Mematuhi rutinitas secara kaku",
     "age_months": 24,
     "options": [
-      { "text": "Anak mematuhi rutinitas secara fleksibel", "score": 4 },
-      { "text": "Anak kadang mematuhi rutinitas secara fleksibel", "score": 3 },
-      { "text": "Anak mematuhi rutinitas secara kaku", "score": 2 }
+      { "text": "Anak mematuhi rutinitas secara fleksibel", "score": 1 },
+      { "text": "Anak kadang mematuhi rutinitas secara fleksibel", "score": 2 },
+      { "text": "Anak mematuhi rutinitas secara kaku", "score": 3 }
     ]
   },
   {
@@ -713,9 +713,9 @@
     "question": "Menderita Kecemasan Mendadak (misalnya adanya peristiwa-peristiwa baru terjadi tanpa ekspektasi)",
     "age_months": 48,
     "options": [
-      { "text": "Anak tidak pernah menderita kecemasan mendadak", "score": 4 },
-      { "text": "Anak kadang menderita kecemasan mendadak", "score": 3 },
-      { "text": "Anak sering menderita kecemasan mendadak", "score": 2 }
+      { "text": "Anak tidak pernah menderita kecemasan mendadak", "score": 1 },
+      { "text": "Anak kadang menderita kecemasan mendadak", "score": 2 },
+      { "text": "Anak sering menderita kecemasan mendadak", "score": 3 }
     ]
   },
   {
@@ -727,10 +727,10 @@
     "options": [
       {
         "text": "Anak tidak pernah melakukan perilaku ritualistik",
-        "score": 4
+        "score": 1
       },
-      { "text": "Anak kadang melakukan perilaku ritualistik", "score": 3 },
-      { "text": "Anak sering melakukan perilaku ritualistik", "score": 2 }
+      { "text": "Anak kadang melakukan perilaku ritualistik", "score": 2 },
+      { "text": "Anak sering melakukan perilaku ritualistik", "score": 3 }
     ]
   },
   {
@@ -742,15 +742,15 @@
     "options": [
       {
         "text": "Anak tidak memiliki minat yang intens dalam subyek terbatas",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang memiliki minat yang intens dalam subyek terbatas",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak memiliki minat yang intens dalam subyek terbatas",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -763,15 +763,15 @@
     "options": [
       {
         "text": "Anak tidak berbicara dan melakukan berjam-jam tentang minat",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang berbicara dan melakukan berjam-jam tentang minat",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak sering berbicara dan melakukan berjam-jam tentang minat",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -782,11 +782,11 @@
     "question": "Ekolalia tidak berhenti",
     "age_months": 12,
     "options": [
-      { "text": "Anak tidak melakukan ekolalia", "score": 4 },
-      { "text": "Anak kadang melakukan ekolalia", "score": 3 },
+      { "text": "Anak tidak melakukan ekolalia", "score": 1 },
+      { "text": "Anak kadang melakukan ekolalia", "score": 2 },
       {
         "text": "Anak sering melakukan ekolalia dan sulit berhenti",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -797,9 +797,9 @@
     "question": "Muncul perilaku stereotip (jinjit-jinjit saat berjalan, membariskan/menumpuk benda, memutar badan)",
     "age_months": 24,
     "options": [
-      { "text": "Anak tidak memiliki perilaku stereotip", "score": 4 },
-      { "text": "Anak kadang muncul perilaku stereotip", "score": 3 },
-      { "text": "Anak sering muncul perilaku stereotip", "score": 2 }
+      { "text": "Anak tidak memiliki perilaku stereotip", "score": 1 },
+      { "text": "Anak kadang muncul perilaku stereotip", "score": 2 },
+      { "text": "Anak sering muncul perilaku stereotip", "score": 3 }
     ]
   },
   {
@@ -811,15 +811,15 @@
     "options": [
       {
         "text": "Anak tidak memiliki gerakan berpola yang konsisten yang tidak memiliki tujuan yang jelas",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang muncul gerakan berpola yang konsisten yang tidak memiliki tujuan yang jelas",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak sering muncul gerakan berpola yang konsisten yang tidak memiliki tujuan yang jelas",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -832,15 +832,15 @@
     "options": [
       {
         "text": "Anak tidak memiliki gerakan yang berubah-ubah dan berulang-ulang",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang muncul gerakan yang berubah-ubah dan berulang-ulang",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak sering muncul gerakan yang berubah-ubah dan berulang-ulang",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -853,13 +853,13 @@
     "options": [
       {
         "text": "Anak tidak memiliki kecenderungan membariskan objek",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang memiliki kecenderungan membariskan objek",
-        "score": 3
+        "score": 2
       },
-      { "text": "Anak memiliki kecenderungan membariskan objek", "score": 2 }
+      { "text": "Anak memiliki kecenderungan membariskan objek", "score": 3 }
     ]
   },
   {
@@ -871,15 +871,15 @@
     "options": [
       {
         "text": "Anak tidak memiliki kecenderungan permainan yang berulang-ulang",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang memiliki kecenderungan permainan yang berulang-ulang",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak memiliki kecenderungan permainan yang berulang-ulang",
-        "score": 2
+        "score": 3
       }
     ]
   },
@@ -892,15 +892,15 @@
     "options": [
       {
         "text": "Anak tidak memiliki kecenderungan menyakiti diri sendiri secara berulang dan berirama",
-        "score": 4
+        "score": 1
       },
       {
         "text": "Anak kadang memiliki kecenderungan menyakiti diri sendiri secara berulang dan berirama",
-        "score": 3
+        "score": 2
       },
       {
         "text": "Anak memiliki kecenderungan menyakiti diri sendiri secara berulang dan berirama",
-        "score": 2
+        "score": 3
       }
     ]
   }

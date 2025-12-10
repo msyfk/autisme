@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_markdown/flutter_markdown.dart'; // Pastikan sudah di add di pubspec
 import 'package:autisme/models/question_model.dart';
+import 'package:autisme/services/gemini_service.dart'; // Import service AI
 
 class ScreeningPage extends StatefulWidget {
-  final int childAgeMonths; // Menerima umur anak
+  final int childAgeMonths;
 
   const ScreeningPage({super.key, required this.childAgeMonths});
 
@@ -15,13 +17,12 @@ class ScreeningPage extends StatefulWidget {
 
 class _ScreeningPageState extends State<ScreeningPage> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
+  final GeminiService _geminiService =
+      GeminiService(); // Inisialisasi Service AI
 
-  // HAPUS _allQuestions KARENA TIDAK DIPAKAI
+  int _currentPage = 0;
   List<ScreeningQuestion> _filteredQuestions = [];
   bool _isLoading = true;
-
-  // Menyimpan jawaban: key = question ID, value = skor
   final Map<int, int> _answers = {};
 
   @override
@@ -31,28 +32,22 @@ class _ScreeningPageState extends State<ScreeningPage> {
   }
 
   Future<void> _loadQuestions() async {
-    // 1. Load JSON dari assets
     final String response = await rootBundle.loadString(
       'assets/data/screening_data.json',
     );
 
-    // 2. Parse ke objek Dart (lokal variabel saja)
     final List<ScreeningQuestion> loadedQuestions = parseQuestions(response);
 
-    // 3. FILTER LOGIC: Ambil soal yang usianya <= usia anak
     List<ScreeningQuestion> ageAppropriate = loadedQuestions
         .where((q) => q.ageMonths <= widget.childAgeMonths)
         .toList();
 
     List<ScreeningQuestion> selectedQuestions = [];
 
-    // 4. LIMIT LOGIC: Maksimal 20 Pertanyaan & Wajib mewakili setiap bagian
+    // LIMIT LOGIC: Maksimal 20 Pertanyaan
     if (ageAppropriate.length <= 20) {
       selectedQuestions = ageAppropriate;
     } else {
-      // Jika lebih dari 20, kita pilih secara cerdas agar semua aspek/bagian terwakili
-
-      // Grouping berdasarkan key unik "Aspek - Bagian"
       Map<String, List<ScreeningQuestion>> groups = {};
       for (var q in ageAppropriate) {
         String key = "${q.aspect}-${q.section}";
@@ -62,40 +57,32 @@ class _ScreeningPageState extends State<ScreeningPage> {
         groups[key]!.add(q);
       }
 
-      // Langkah 4a: Ambil minimal 1 soal dari setiap grup (Bagian)
       List<String> groupKeys = groups.keys.toList();
       Set<int> selectedIds = {};
 
       for (var key in groupKeys) {
         if (selectedQuestions.length >= 20) break;
-
         var groupQuestions = groups[key]!;
-        // Ambil soal pertama dari grup tersebut
         var q = groupQuestions[0];
-
         selectedQuestions.add(q);
         selectedIds.add(q.id);
       }
 
-      // Langkah 4b: Jika masih kurang dari 20, isi dengan sisa soal yang belum terpilih
       if (selectedQuestions.length < 20) {
         List<ScreeningQuestion> remaining = ageAppropriate
             .where((q) => !selectedIds.contains(q.id))
             .toList();
 
-        // Ambil sisa kuota untuk mencapai 20
         int slotsNeeded = 20 - selectedQuestions.length;
         for (int i = 0; i < slotsNeeded && i < remaining.length; i++) {
           selectedQuestions.add(remaining[i]);
         }
       }
 
-      // Urutkan kembali berdasarkan ID agar urutan soal logis
       selectedQuestions.sort((a, b) => a.id.compareTo(b.id));
     }
 
     setState(() {
-      // Kita hanya simpan hasil filter ke state
       _filteredQuestions = selectedQuestions;
       _isLoading = false;
     });
@@ -114,7 +101,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
         curve: Curves.easeIn,
       );
     } else {
-      _finishTest();
+      _finishTestWithAI(); // Panggil fungsi baru yang menggunakan AI
     }
   }
 
@@ -127,25 +114,137 @@ class _ScreeningPageState extends State<ScreeningPage> {
     }
   }
 
-  void _finishTest() {
-    // Hitung total skor
+  // Fungsi untuk menyelesaikan tes dan memanggil AI
+  Future<void> _finishTestWithAI() async {
+    // 1. Hitung Total Skor
     int totalScore = _answers.values.fold(0, (sum, item) => sum + item);
 
+    // 2. Tampilkan Loading Dialog
     showDialog(
       context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text("Sedang menganalisis jawaban dengan AI..."),
+          ],
+        ),
+      ),
+    );
+
+    // 3. Panggil Gemini AI
+    String analysisResult = await _geminiService.analyzeScreeningResult(
+      totalScore: totalScore,
+      questions: _filteredQuestions,
+      answers: _answers,
+    );
+
+    // 4. Tutup Loading Dialog
+    if (!mounted) return;
+    Navigator.of(context).pop();
+
+    // 5. Tampilkan Hasil
+    _showResultDialog(totalScore, analysisResult);
+  }
+
+  void _showResultDialog(int totalScore, String aiAnalysis) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Tes Selesai'),
-        content: Text(
-          'Terima kasih. Total Skor: $totalScore\n(Logika diagnosa dapat ditambahkan di sini)',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.psychology, color: Colors.blue.shade800),
+            const SizedBox(width: 10),
+            const Text(
+              'Hasil Analisis AI',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total Skor:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "$totalScore",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Render teks Markdown dari AI
+                MarkdownBody(
+                  data: aiAnalysis,
+                  styleSheet: MarkdownStyleSheet(
+                    h1: TextStyle(
+                      color: Colors.blue.shade800,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    h2: TextStyle(
+                      color: Colors.blue.shade800,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    p: const TextStyle(fontSize: 14, height: 1.5),
+                    strong: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Tutup dialog
-              Navigator.of(context).pop(); // Kembali ke menu utama
-            },
-            child: const Text('Selesai'),
+          Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade800,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+                Navigator.of(context).pop(); // Kembali ke menu utama
+              },
+              child: const Text('Selesai', style: TextStyle(fontSize: 16)),
+            ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -176,7 +275,6 @@ class _ScreeningPageState extends State<ScreeningPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Progress bar
             LinearProgressIndicator(
               value: (_currentPage + 1) / _filteredQuestions.length,
               backgroundColor: Colors.grey[200],
@@ -193,12 +291,10 @@ class _ScreeningPageState extends State<ScreeningPage> {
               ),
             ),
 
-            // Area Pertanyaan
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                physics:
-                    const NeverScrollableScrollPhysics(), // User harus klik tombol/opsi
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: _filteredQuestions.length,
                 onPageChanged: (index) {
                   setState(() {
@@ -211,7 +307,6 @@ class _ScreeningPageState extends State<ScreeningPage> {
               ),
             ),
 
-            // Tombol Navigasi
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -224,14 +319,13 @@ class _ScreeningPageState extends State<ScreeningPage> {
                     backgroundColor: Colors.blue.shade800,
                     foregroundColor: Colors.white,
                   ),
-                  // Tombol lanjut hanya aktif jika pertanyaan ini sudah dijawab
                   onPressed:
                       _answers.containsKey(_filteredQuestions[_currentPage].id)
                       ? _goToNextPage
                       : null,
                   child: Text(
                     _currentPage == _filteredQuestions.length - 1
-                        ? 'Selesai'
+                        ? 'Analisis AI'
                         : 'Lanjut',
                   ),
                 ),
@@ -253,7 +347,6 @@ class _ScreeningPageState extends State<ScreeningPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Menampilkan Aspek dan Bagian
               Text(
                 '${question.aspect} - ${question.section}',
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
@@ -268,7 +361,6 @@ class _ScreeningPageState extends State<ScreeningPage> {
               ),
               const SizedBox(height: 24),
 
-              // Menampilkan Opsi Jawaban Dinamis
               ...question.options.map((option) {
                 return RadioListTile<int>(
                   title: Text(option.text),
