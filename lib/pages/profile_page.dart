@@ -1,5 +1,6 @@
 // lib/pages/profile_page.dart
 
+import 'package:autisme/pages/edit_profile_page.dart';
 import 'package:autisme/pages/login_page.dart';
 import 'package:autisme/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,19 @@ class _ProfilePageState extends State<ProfilePage> {
       'Desember',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  List<Map<String, dynamic>> get _children => _authService.getChildren();
+
+  Future<void> _navigateToEditProfile() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (context) => const EditProfilePage()),
+    );
+
+    if (result == true && mounted) {
+      setState(() {}); // Refresh data after edit
+    }
   }
 
   Future<void> _handleLogout() async {
@@ -189,6 +203,172 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16),
+
+                  // Edit Profile Button
+                  OutlinedButton.icon(
+                    onPressed: _navigateToEditProfile,
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit Profil'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.blue.shade800,
+                      side: BorderSide(color: Colors.blue.shade800),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Children Section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.child_care,
+                            color: Colors.blue.shade800,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Daftar Anak',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextButton.icon(
+                        onPressed: _navigateToEditProfile,
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Tambah'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue.shade800,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  if (_children.isEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.family_restroom,
+                            size: 48,
+                            color: Colors.grey.shade400,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Belum ada data anak',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Tambahkan anak anda untuk tracking screening',
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _children.length,
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final child = _children[index];
+                        return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: _getChildColor(index),
+                            child: Text(
+                              child['name'][0].toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            child['name'],
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            '${child['age']} tahun',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  _getAgeCategory(child['age'])['color']
+                                      as Color,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              _getAgeCategory(child['age'])['label'] as String,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
@@ -242,6 +422,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     label: 'Terdaftar',
                     value: _memberSince,
                   ),
+                  const Divider(height: 24),
+
+                  _buildInfoRow(
+                    icon: Icons.child_care,
+                    label: 'Jumlah Anak',
+                    value: '${_children.length} anak',
+                  ),
                 ],
               ),
             ),
@@ -285,6 +472,29 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Color _getChildColor(int index) {
+    final colors = [
+      Colors.blue.shade600,
+      Colors.purple.shade600,
+      Colors.teal.shade600,
+      Colors.orange.shade600,
+      Colors.pink.shade600,
+    ];
+    return colors[index % colors.length];
+  }
+
+  Map<String, dynamic> _getAgeCategory(int age) {
+    if (age <= 2) {
+      return {'label': 'Bayi', 'color': Colors.pink.shade400};
+    } else if (age <= 5) {
+      return {'label': 'Balita', 'color': Colors.orange.shade400};
+    } else if (age <= 12) {
+      return {'label': 'Anak', 'color': Colors.blue.shade400};
+    } else {
+      return {'label': 'Remaja', 'color': Colors.purple.shade400};
+    }
   }
 
   Widget _buildInfoRow({

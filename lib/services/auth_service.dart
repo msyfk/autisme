@@ -12,7 +12,7 @@ class AuthService {
     final response = await _supabase.auth.signUp(
       email: email,
       password: password,
-      data: {'full_name': fullName},
+      data: {'full_name': fullName, 'children': []},
     );
     return response;
   }
@@ -27,6 +27,78 @@ class AuthService {
       password: password,
     );
     return response;
+  }
+
+  // Update user profile
+  Future<UserResponse> updateProfile({
+    String? fullName,
+    List<Map<String, dynamic>>? children,
+  }) async {
+    final Map<String, dynamic> data = {};
+
+    if (fullName != null) {
+      data['full_name'] = fullName;
+    }
+
+    if (children != null) {
+      data['children'] = children;
+    }
+
+    final response = await _supabase.auth.updateUser(
+      UserAttributes(data: data),
+    );
+    return response;
+  }
+
+  // Add a child
+  Future<UserResponse> addChild({
+    required String name,
+    required int age,
+  }) async {
+    final currentChildren = getChildren();
+    final newChild = {
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'name': name,
+      'age': age,
+    };
+    currentChildren.add(newChild);
+
+    return updateProfile(children: currentChildren);
+  }
+
+  // Update a child
+  Future<UserResponse> updateChild({
+    required String childId,
+    String? name,
+    int? age,
+  }) async {
+    final currentChildren = getChildren();
+    final index = currentChildren.indexWhere((c) => c['id'] == childId);
+
+    if (index != -1) {
+      if (name != null) currentChildren[index]['name'] = name;
+      if (age != null) currentChildren[index]['age'] = age;
+    }
+
+    return updateProfile(children: currentChildren);
+  }
+
+  // Remove a child
+  Future<UserResponse> removeChild(String childId) async {
+    final currentChildren = getChildren();
+    currentChildren.removeWhere((c) => c['id'] == childId);
+
+    return updateProfile(children: currentChildren);
+  }
+
+  // Get children list
+  List<Map<String, dynamic>> getChildren() {
+    final metadata = _supabase.auth.currentUser?.userMetadata;
+    if (metadata == null || metadata['children'] == null) {
+      return [];
+    }
+    final children = metadata['children'] as List<dynamic>;
+    return children.map((c) => Map<String, dynamic>.from(c)).toList();
   }
 
   // Logout
