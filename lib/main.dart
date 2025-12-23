@@ -1,9 +1,22 @@
-import 'package:autisme/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:autisme/pages/splash_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url:
+        'https://ykzekfcaasndivbdsxkh.supabase.co', // Ganti dengan URL project Anda
+    anonKey:
+        'sb_publishable_iRmpjaLH77upiAbsNrURhw_l4YKhmXb', // Ganti dengan Anon Key Anda
+  );
+
   runApp(const MyApp());
 }
+
+// Helper untuk akses Supabase client
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
