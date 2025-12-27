@@ -6,9 +6,12 @@ import 'package:autisme/models/diagnosis_model.dart';
 import 'package:autisme/models/question_model.dart';
 
 class AIDiagnosisService {
-  // PENTING: Ganti dengan API key Anda dari https://console.anthropic.com
-  static const String apiKey = 'claude_code_key_musyaffaksyafak_zhtu';
-  static const String apiUrl = 'https://api.anthropic.com/v1/messages';
+  // API Key dari OpenRouter AI: https://openrouter.ai/
+  static const String apiKey =
+      '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';
+  static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+  // Model yang digunakan (bisa diganti dengan model lain dari OpenRouter)
+  static const String modelId = 'deepseek/deepseek-r1-0528:free';
 
   Future<DiagnosisResult> getDiagnosis({
     required int childAgeMonths,
@@ -122,21 +125,37 @@ Gunakan bahasa yang empatik, tidak menghakimi, dan memberikan harapan. Maksimal 
         Uri.parse(apiUrl),
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
+          'Authorization': 'Bearer $apiKey',
+          'HTTP-Referer': 'https://autisme-app.com', // Optional: untuk tracking
+          'X-Title': 'Autisme Screening App', // Optional: untuk tracking
         },
         body: jsonEncode({
-          'model': 'claude-sonnet-4-20250514',
-          'max_tokens': 1024,
+          'model': modelId,
           'messages': [
+            {
+              'role': 'system',
+              'content':
+                  'Anda adalah asisten ahli dalam diagnosis dini autisme pada anak. Berikan rekomendasi dalam bahasa Indonesia yang empatik, tidak menghakimi, dan memberikan harapan.',
+            },
             {'role': 'user', 'content': prompt},
           ],
+          'temperature': 0.7,
+          'max_tokens': 1024,
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['content'][0]['text'];
+        // Extract text from OpenRouter/OpenAI response structure
+        final choices = data['choices'] as List<dynamic>?;
+        if (choices != null && choices.isNotEmpty) {
+          final message = choices[0]['message'];
+          if (message != null && message['content'] != null) {
+            return message['content'] ??
+                _getFallbackRecommendation(riskLevel, affectedAspects);
+          }
+        }
+        return _getFallbackRecommendation(riskLevel, affectedAspects);
       } else {
         print('AI Error: ${response.statusCode} - ${response.body}');
         return _getFallbackRecommendation(riskLevel, affectedAspects);
