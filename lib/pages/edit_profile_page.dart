@@ -100,7 +100,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             TextField(
               controller: ageController,
               decoration: InputDecoration(
-                labelText: 'Usia (tahun)',
+                labelText: 'Usia (bulan)',
+                hintText: 'Contoh: 24 untuk 2 tahun',
                 prefixIcon: const Icon(Icons.cake),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -125,7 +126,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
 
               final age = int.tryParse(ageText);
-              if (age == null || age < 0 || age > 18) {
+              if (age == null || age < 0 || age > 216) {
                 return;
               }
 
@@ -176,7 +177,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             TextField(
               controller: ageController,
               decoration: InputDecoration(
-                labelText: 'Usia (tahun)',
+                labelText: 'Usia (bulan)',
+                hintText: 'Contoh: 24 untuk 2 tahun',
                 prefixIcon: const Icon(Icons.cake),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -211,7 +213,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
 
               final age = int.tryParse(ageText);
-              if (age == null || age < 0 || age > 18) {
+              if (age == null || age < 0 || age > 216) {
                 return;
               }
 
@@ -423,7 +425,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             child['name'],
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          subtitle: Text('${child['age']} tahun'),
+                          subtitle: Text('${child['age']} bulan'),
                           trailing: IconButton(
                             icon: Icon(Icons.edit, color: Colors.blue.shade800),
                             onPressed: _isLoading

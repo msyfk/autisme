@@ -343,7 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(
-                            '${child['age']} tahun',
+                            '${child['age']} bulan',
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           trailing: Container(
@@ -485,12 +485,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return colors[index % colors.length];
   }
 
-  Map<String, dynamic> _getAgeCategory(int age) {
-    if (age <= 2) {
+  Map<String, dynamic> _getAgeCategory(int ageInMonths) {
+    if (ageInMonths <= 24) {
       return {'label': 'Bayi', 'color': Colors.pink.shade400};
-    } else if (age <= 5) {
+    } else if (ageInMonths <= 60) {
       return {'label': 'Balita', 'color': Colors.orange.shade400};
-    } else if (age <= 12) {
+    } else if (ageInMonths <= 144) {
       return {'label': 'Anak', 'color': Colors.blue.shade400};
     } else {
       return {'label': 'Remaja', 'color': Colors.purple.shade400};
