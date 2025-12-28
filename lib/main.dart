@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:autisme/pages/splash_screen.dart';
+import 'package:autisme/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,9 @@ Future<void> main() async {
     anonKey:
         'sb_publishable_iRmpjaLH77upiAbsNrURhw_l4YKhmXb', // Ganti dengan Anon Key Anda
   );
+
+  // Inisialisasi Notification Service
+  await NotificationService().initialize();
 
   runApp(const MyApp());
 }

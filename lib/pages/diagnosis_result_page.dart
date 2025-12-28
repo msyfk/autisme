@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:autisme/models/diagnosis_model.dart';
+import 'package:autisme/services/reminder_service.dart';
 
-class DiagnosisResultPage extends StatelessWidget {
+class DiagnosisResultPage extends StatefulWidget {
   final DiagnosisResult diagnosis;
   final int childAgeMonths;
 
@@ -12,6 +13,21 @@ class DiagnosisResultPage extends StatelessWidget {
     required this.diagnosis,
     required this.childAgeMonths,
   });
+
+  @override
+  State<DiagnosisResultPage> createState() => _DiagnosisResultPageState();
+}
+
+class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Update tanggal screening terakhir saat halaman hasil dibuka
+    ReminderService().updateLastScreeningDate();
+  }
+
+  DiagnosisResult get diagnosis => widget.diagnosis;
+  int get childAgeMonths => widget.childAgeMonths;
 
   Color _getRiskColor() {
     switch (diagnosis.riskLevel) {

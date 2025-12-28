@@ -10,7 +10,6 @@ class AIDiagnosisService {
   static const String apiKey =
       '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';
   static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  // Model yang digunakan (bisa diganti dengan model lain dari OpenRouter)
   static const String modelId = 'deepseek/deepseek-r1-0528:free';
 
   Future<DiagnosisResult> getDiagnosis({
