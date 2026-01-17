@@ -8,7 +8,7 @@ import 'package:autisme/models/question_model.dart';
 class AIDiagnosisService {
   // API Key dari OpenRouter AI: https://openrouter.ai/
   static const String apiKey =
-      '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';
+      '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';
   static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
   static const String modelId = 'deepseek/deepseek-r1-0528:free';
 
