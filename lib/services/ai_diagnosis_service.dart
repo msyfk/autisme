@@ -8,9 +8,9 @@ import 'package:autisme/models/question_model.dart';
 class AIDiagnosisService {
   // API Key dari OpenRouter AI: https://openrouter.ai/
   static const String apiKey =
-      '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';
+      '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';
   static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  static const String modelId = 'deepseek/deepseek-r1-0528:free';
+  static const String modelId = 'deepseek/deepseek-r1:free';
 
   Future<DiagnosisResult> getDiagnosis({
     required int childAgeMonths,
