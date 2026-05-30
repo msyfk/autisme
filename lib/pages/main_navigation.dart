@@ -76,7 +76,10 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
         ],
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue.shade800,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
         onTap: _onItemTapped, // Panggil fungsi saat item di-tap
       ),
     );
