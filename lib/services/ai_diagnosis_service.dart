@@ -2,15 +2,15 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:autisme/models/diagnosis_model.dart';
 import 'package:autisme/models/question_model.dart';
 
 class AIDiagnosisService {
-  // API Key dari OpenRouter AI: https://openrouter.ai/
-  static const String apiKey =
-      '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';
+  // API Key dibaca dari file .env
+  static String get apiKey => dotenv.env['OPENROUTER_API_KEY'] ?? '';
   static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  static const String modelId = 'deepseek/deepseek-r1:free';
+  static const String modelId = 'deepseek/deepseek-v4-flash';
 
   Future<DiagnosisResult> getDiagnosis({
     required int childAgeMonths,

@@ -147,11 +147,13 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
                             color: Colors.blue.shade800,
                           ),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Aspek yang Memerlukan Perhatian',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          const Expanded(
+                            child: Text(
+                              'Aspek yang Memerlukan Perhatian',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -203,11 +205,13 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
                           color: Colors.blue.shade800,
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Detail Skor per Aspek',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        const Expanded(
+                          child: Text(
+                            'Detail Skor per Aspek',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
@@ -280,11 +284,13 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
                           color: Colors.blue.shade800,
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Rekomendasi Ahli',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        const Expanded(
+                          child: Text(
+                            'Rekomendasi Ahli',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

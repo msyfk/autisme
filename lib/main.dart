@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:autisme/pages/splash_screen.dart';
 import 'package:autisme/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables dari .env
+  await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
     url:

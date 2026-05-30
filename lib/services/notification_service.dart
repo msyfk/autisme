@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -20,6 +21,13 @@ class NotificationService {
   Future<void> initialize() async {
     // Inisialisasi timezone
     tz.initializeTimeZones();
+
+    // Set timezone lokal berdasarkan device
+    final timezoneInfo = await FlutterTimezone.getLocalTimezone();
+    final String timeZoneName = timezoneInfo.identifier;
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
+
+    debugPrint('Timezone lokal diset ke: $timeZoneName');
 
     // Konfigurasi Android
     const androidSettings = AndroidInitializationSettings(
