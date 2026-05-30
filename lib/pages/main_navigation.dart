@@ -3,6 +3,7 @@
 import 'package:autisme/pages/home_page.dart';
 import 'package:autisme/pages/profile_page.dart';
 import 'package:autisme/pages/reminder_page.dart';
+import 'package:autisme/pages/history_page.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -19,13 +20,15 @@ class _MainNavigationState extends State<MainNavigation> {
   static const List<Widget> _pages = <Widget>[
     HomePage(), // Indeks 0: Dashboard
     ReminderPage(), // Indeks 1: Pengingat
-    ProfilePage(), // Indeks 2: Profil
+    HistoryPage(), // Indeks 2: Riwayat
+    ProfilePage(), // Indeks 3: Profil
   ];
 
   // Daftar judul untuk AppBar
   static const List<String> _titles = <String>[
     'Dashboard',
     'Pengingat',
+    'Riwayat Screening',
     'Profil',
   ];
 
@@ -60,6 +63,11 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.notifications_outlined),
             activeIcon: Icon(Icons.notifications),
             label: 'Pengingat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_outlined),
+            activeIcon: Icon(Icons.history),
+            label: 'Riwayat',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),

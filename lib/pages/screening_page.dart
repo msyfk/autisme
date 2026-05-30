@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:autisme/models/question_model.dart';
 import 'package:autisme/services/ai_diagnosis_service.dart';
+import 'package:autisme/services/history_service.dart';
 import 'package:autisme/pages/diagnosis_result_page.dart';
 
 class ScreeningPage extends StatefulWidget {
@@ -126,6 +127,17 @@ class _ScreeningPageState extends State<ScreeningPage> {
         answers: _answers,
         questions: _filteredQuestions,
       );
+
+      // Simpan riwayat ke Supabase
+      try {
+        await HistoryService().saveScreeningResult(
+          result: diagnosis,
+          childAgeMonths: widget.childAgeMonths,
+        );
+      } catch (e) {
+        debugPrint('Gagal menyimpan riwayat: $e');
+        // Tetap lanjut meskipun gagal simpan riwayat
+      }
 
       setState(() {
         _isProcessing = false;

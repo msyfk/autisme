@@ -1,6 +1,7 @@
 // lib/pages/diagnosis_result_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:autisme/models/diagnosis_model.dart';
 import 'package:autisme/services/reminder_service.dart';
 
@@ -296,10 +297,36 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      diagnosis.aiRecommendation,
-                      style: const TextStyle(fontSize: 15, height: 1.6),
-                      textAlign: TextAlign.justify,
+                    MarkdownBody(
+                      data: diagnosis.aiRecommendation,
+                      styleSheet: MarkdownStyleSheet(
+                        p: const TextStyle(fontSize: 15, height: 1.6),
+                        strong: const TextStyle(
+                          fontSize: 15,
+                          height: 1.6,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        h1: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade800,
+                        ),
+                        h2: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade800,
+                        ),
+                        h3: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade800,
+                        ),
+                        listBullet: TextStyle(
+                          fontSize: 15,
+                          color: Colors.blue.shade800,
+                        ),
+                        blockSpacing: 12,
+                      ),
                     ),
                   ],
                 ),
