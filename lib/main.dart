@@ -12,10 +12,8 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
-    url:
-        'https://ykzekfcaasndivbdsxkh.supabase.co', // Ganti dengan URL project Anda
-    anonKey:
-        'sb_publishable_iRmpjaLH77upiAbsNrURhw_l4YKhmXb', // Ganti dengan Anon Key Anda
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   // Inisialisasi Notification Service
