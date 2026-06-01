@@ -39,6 +39,15 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 if (ageController.text.isNotEmpty) {
                   int age = int.parse(ageController.text);
+                  if (age < 1 || age > 72) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Usia harus antara 1 - 72 bulan'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
                   Navigator.pop(context); // Tutup dialog
                   // Pindah ke Screening Page dengan membawa data umur
                   Navigator.push(

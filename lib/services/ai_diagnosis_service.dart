@@ -1,6 +1,7 @@
 // lib/services/ai_diagnosis_service.dart
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:autisme/models/diagnosis_model.dart';
@@ -156,11 +157,11 @@ Gunakan bahasa yang empatik, tidak menghakimi, dan memberikan harapan. Maksimal 
         }
         return _getFallbackRecommendation(riskLevel, affectedAspects);
       } else {
-        print('AI Error: ${response.statusCode} - ${response.body}');
+        debugPrint('AI Error: ${response.statusCode} - ${response.body}');
         return _getFallbackRecommendation(riskLevel, affectedAspects);
       }
     } catch (e) {
-      print('AI Error: $e');
+      debugPrint('AI Error: $e');
       return _getFallbackRecommendation(riskLevel, affectedAspects);
     }
   }
