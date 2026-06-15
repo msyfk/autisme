@@ -1,4 +1,4 @@
-// lib/pages/screening_page.dart (UPDATED)
+// lib/pages/screening_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -22,7 +22,7 @@ class _ScreeningPageState extends State<ScreeningPage> {
 
   List<ScreeningQuestion> _filteredQuestions = [];
   bool _isLoading = true;
-  bool _isProcessing = false; // Untuk loading saat proses AI
+  bool _isProcessing = false;
 
   final Map<int, int> _answers = {};
   final AIDiagnosisService _aiService = AIDiagnosisService();
@@ -99,19 +99,10 @@ class _ScreeningPageState extends State<ScreeningPage> {
     if (_currentPage < _filteredQuestions.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
+        curve: Curves.easeInOut,
       );
     } else {
       _finishTest();
-    }
-  }
-
-  void _goToPreviousPage() {
-    if (_currentPage > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
     }
   }
 
@@ -121,14 +112,12 @@ class _ScreeningPageState extends State<ScreeningPage> {
     });
 
     try {
-      // Dapatkan diagnosis dari AI
       final diagnosis = await _aiService.getDiagnosis(
         childAgeMonths: widget.childAgeMonths,
         answers: _answers,
         questions: _filteredQuestions,
       );
 
-      // Simpan riwayat ke Supabase
       try {
         await HistoryService().saveScreeningResult(
           result: diagnosis,
@@ -136,14 +125,12 @@ class _ScreeningPageState extends State<ScreeningPage> {
         );
       } catch (e) {
         debugPrint('Gagal menyimpan riwayat: $e');
-        // Tetap lanjut meskipun gagal simpan riwayat
       }
 
       setState(() {
         _isProcessing = false;
       });
 
-      // Navigasi ke halaman hasil
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -164,11 +151,11 @@ class _ScreeningPageState extends State<ScreeningPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Terjadi Kesalahan'),
-            content: Text(
-              'Gagal memproses hasil diagnosis. Error: $e\n\n'
-              'Silakan coba lagi atau hubungi administrator.',
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
+            title: const Text('Terjadi Kesalahan'),
+            content: Text('Gagal memproses hasil diagnosis. Error: $e'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -183,49 +170,75 @@ class _ScreeningPageState extends State<ScreeningPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (_filteredQuestions.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Screening')),
-        body: const Center(
-          child: Text('Tidak ada pertanyaan untuk kategori usia ini.'),
-        ),
-      );
-    }
+    if (_isLoading) return _buildLoadingState();
+    if (_filteredQuestions.isEmpty) return _buildEmptyState();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Screening Test'),
-        backgroundColor: Colors.blue.shade800,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Screening',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () {
+            if (_currentPage > 0) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  title: const Text('Batalkan Screening?'),
+                  content: const Text('Progres pengisian akan hilang.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Lanjut Mengisi'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Keluar',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4),
+          child: LinearProgressIndicator(
+            value: (_currentPage + 1) / _filteredQuestions.length,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
       ),
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          SafeArea(
             child: Column(
               children: [
-                // Progress bar
-                LinearProgressIndicator(
-                  value: (_currentPage + 1) / _filteredQuestions.length,
-                  backgroundColor: Colors.grey[200],
-                  color: Colors.blue.shade800,
-                ),
-                const SizedBox(height: 16),
-
-                Text(
-                  'Pertanyaan ${_currentPage + 1}/${_filteredQuestions.length}',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade800,
-                  ),
-                ),
-
-                // Area Pertanyaan
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
@@ -241,118 +254,246 @@ class _ScreeningPageState extends State<ScreeningPage> {
                     },
                   ),
                 ),
-
-                // Tombol Navigasi
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: _currentPage == 0 ? null : _goToPreviousPage,
-                      child: const Text('Kembali'),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade800,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed:
-                          _answers.containsKey(
-                            _filteredQuestions[_currentPage].id,
-                          )
-                          ? _goToNextPage
-                          : null,
-                      child: Text(
-                        _currentPage == _filteredQuestions.length - 1
-                            ? 'Selesai'
-                            : 'Lanjut',
-                      ),
-                    ),
-                  ],
-                ),
+                _buildBottomNavigation(),
               ],
             ),
           ),
-
-          // Loading overlay saat proses AI
-          if (_isProcessing)
-            Container(
-              color: Colors.black54,
-              child: Center(
-                child: Card(
-                  margin: const EdgeInsets.all(32),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CircularProgressIndicator(),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Menganalisis Hasil...',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'AI sedang memproses data screening\ndan membuat rekomendasi untuk Anda',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          if (_isProcessing) _buildProcessingOverlay(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Menyiapkan Pertanyaan',
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.assignment_late_outlined,
+                size: 64,
+                color: Colors.grey.shade400,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Tidak ada pertanyaan',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Belum ada pertanyaan screening untuk usia anak yang dipilih.',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildQuestionCard(ScreeningQuestion question) {
     return SingleChildScrollView(
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${question.aspect} - ${question.section}',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                question.question,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'PERTANYAAN ${_currentPage + 1} DARI ${_filteredQuestions.length}',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: Colors.grey.shade500,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              question.aspect,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            question.question,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 40),
 
-              ...question.options.map((option) {
-                return RadioListTile<int>(
-                  title: Text(option.text),
-                  value: option.score,
-                  groupValue: _answers[question.id],
-                  activeColor: Colors.blue.shade800,
-                  onChanged: (int? value) {
+          // Options as simple clean list
+          Container(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.grey.shade200)),
+            ),
+            child: Column(
+              children: question.options.map((option) {
+                final isSelected = _answers[question.id] == option.score;
+                return InkWell(
+                  onTap: () {
                     setState(() {
-                      _answers[question.id] = value!;
+                      _answers[question.id] = option.score;
                     });
                   },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade200),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isSelected
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_unchecked,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Colors.grey.shade400,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            option.text,
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: isSelected
+                                      ? Colors.black87
+                                      : Colors.grey.shade700,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
-              }),
-            ],
+              }).toList(),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigation() {
+    final hasAnswered = _answers.containsKey(
+      _filteredQuestions[_currentPage].id,
+    );
+    final isLastPage = _currentPage == _filteredQuestions.length - 1;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: hasAnswered ? _goToNextPage : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: Colors.grey.shade300,
+              disabledForegroundColor: Colors.grey.shade500,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              isLastPage ? 'Selesai' : 'Lanjut',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProcessingOverlay() {
+    return Container(
+      color: Colors.white, // Fully opaque white for clean look
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Memproses Hasil...',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Harap tunggu sebentar',
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+            ),
+          ],
         ),
       ),
     );

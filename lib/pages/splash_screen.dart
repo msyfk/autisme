@@ -1,6 +1,7 @@
 // lib/pages/splash_screen.dart
 
 import 'dart:async';
+import 'package:autisme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:autisme/pages/login_page.dart';
@@ -21,57 +22,91 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Tunggu 2 detik untuk menampilkan splash screen
     await Future.delayed(const Duration(seconds: 2));
-
     if (!mounted) return;
 
-    // Cek apakah user sudah login
     final session = Supabase.instance.client.auth.currentSession;
-
-    if (session != null) {
-      // User sudah login, arahkan ke main navigation
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainNavigation()),
-      );
-    } else {
-      // User belum login, arahkan ke login page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            session != null ? const MainNavigation() : const LoginPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              width: 200,
-              height: 200,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'NeuroSense',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue.shade800,
+      backgroundColor: AppTheme.background,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -80,
+            right: -70,
+            child: _decorCircle(210, AppTheme.accent.withValues(alpha: 0.35)),
+          ),
+          Positioned(
+            bottom: -90,
+            left: -80,
+            child: _decorCircle(230, AppTheme.detail.withValues(alpha: 0.18)),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(36),
+                      border: Border.all(
+                        color: AppTheme.detail.withValues(alpha: 0.24),
+                      ),
+                      boxShadow: AppTheme.softShadow,
+                    ),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 132,
+                      height: 132,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'NeuroSense',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Peduli, hangat, dan deteksi dini',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 44),
+                  const SizedBox(
+                    width: 34,
+                    height: 34,
+                    child: CircularProgressIndicator(strokeWidth: 3),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            const CircularProgressIndicator(),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _decorCircle(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
 }

@@ -82,30 +82,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Tambah Anak'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: Colors.white,
+        title: Text(
+          'Tambah Anak',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nama Anak',
-                prefixIcon: const Icon(Icons.child_care),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                prefixIcon: Icon(Icons.child_care),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: ageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Usia (bulan)',
                 hintText: 'Contoh: 24 untuk 2 tahun',
-                prefixIcon: const Icon(Icons.cake),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                prefixIcon: Icon(Icons.cake_outlined),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -114,7 +115,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
+            child: Text('Batal', style: TextStyle(color: Colors.grey.shade600)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -140,10 +141,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade800,
-              foregroundColor: Colors.white,
-            ),
             child: const Text('Tambah'),
           ),
         ],
@@ -159,30 +156,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Anak'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: Colors.white,
+        title: Text(
+          'Edit Anak',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nama Anak',
-                prefixIcon: const Icon(Icons.child_care),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                prefixIcon: Icon(Icons.child_care),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: ageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Usia (bulan)',
                 hintText: 'Contoh: 24 untuk 2 tahun',
-                prefixIcon: const Icon(Icons.cake),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                prefixIcon: Icon(Icons.cake_outlined),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -201,7 +199,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
+            child: Text('Batal', style: TextStyle(color: Colors.grey.shade600)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -227,10 +225,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade800,
-              foregroundColor: Colors.white,
-            ),
             child: const Text('Simpan'),
           ),
         ],
@@ -241,144 +235,112 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Edit Profil'),
-        backgroundColor: Colors.blue.shade800,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: Colors.grey.shade200, height: 1),
+        ),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveProfile,
             child: _isLoading
-                ? const SizedBox(
+                ? SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   )
-                : const Text(
+                : Text(
                     'Simpan',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
           ),
+          const SizedBox(width: 8),
         ],
       ),
-      backgroundColor: Colors.grey.shade100,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Profile Section
+            Text(
+              'Informasi Pribadi',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 16),
             Container(
-              width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Informasi Profil',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade800,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nama Lengkap',
-                      prefixIcon: const Icon(Icons.person_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    enabled: !_isLoading,
-                  ),
-                ],
+              child: TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Nama Lengkap',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+                enabled: !_isLoading,
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
             // Children Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Data Anak',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: _isLoading ? null : _showAddChildDialog,
+                  icon: const Icon(Icons.add, size: 20),
+                  label: const Text('Tambah'),
+                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Daftar Anak',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade800,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: _isLoading ? null : _showAddChildDialog,
-                        icon: Icon(
-                          Icons.add_circle,
-                          color: Colors.blue.shade800,
-                          size: 28,
-                        ),
-                        tooltip: 'Tambah Anak',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  if (_children.isEmpty)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.grey.shade200,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
+              child: _children.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(32),
                       child: Column(
                         children: [
                           Icon(
-                            Icons.child_care,
+                            Icons.child_care_outlined,
                             size: 48,
-                            color: Colors.grey.shade400,
+                            color: Colors.grey.shade300,
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 16),
                           Text(
                             'Belum ada data anak',
                             style: TextStyle(
@@ -386,19 +348,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               fontSize: 14,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Tap + untuk menambahkan',
-                            style: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: 12,
-                            ),
-                          ),
                         ],
                       ),
                     )
-                  else
-                    ListView.separated(
+                  : ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _children.length,
@@ -408,29 +361,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         final child = _children[index];
                         return ListTile(
                           contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                            horizontal: 20,
+                            vertical: 8,
                           ),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue.shade100,
-                            child: Text(
-                              child['name'][0].toUpperCase(),
-                              style: TextStyle(
-                                color: Colors.blue.shade800,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.child_care,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           title: Text(
                             child['name'],
-                            style: const TextStyle(fontWeight: FontWeight.w500),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
-                          subtitle: Text('${child['age']} bulan'),
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue.shade800),
-                            onPressed: _isLoading
-                                ? null
-                                : () => _showEditChildDialog(index),
+                          subtitle: Text(
+                            '${child['age']} bulan',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                          trailing: Icon(
+                            Icons.edit_outlined,
+                            color: Colors.grey.shade400,
+                            size: 20,
                           ),
                           onTap: _isLoading
                               ? null
@@ -438,10 +399,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         );
                       },
                     ),
-                ],
-              ),
             ),
-
             const SizedBox(height: 32),
           ],
         ),

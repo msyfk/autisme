@@ -71,10 +71,12 @@ class _LoginPageState extends State<LoginPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red.shade600 : Colors.green.shade600,
+        backgroundColor: isError
+            ? Theme.of(context).colorScheme.error
+            : Colors.green.shade600,
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -82,26 +84,51 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 40),
+              // Logo or Graphic
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
               Text(
                 'Selamat Datang',
-                style: TextStyle(
-                  fontSize: 28,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade800,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 8),
               Text(
                 'Masuk untuk melanjutkan',
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -109,17 +136,14 @@ class _LoginPageState extends State<LoginPage> {
               // Email
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Password
               TextField(
@@ -137,46 +161,41 @@ class _LoginPageState extends State<LoginPage> {
                       setState(() => _obscurePassword = !_obscurePassword);
                     },
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                 ),
                 obscureText: _obscurePassword,
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
 
               // Tombol Login
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade800,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _isLoading ? null : _handleLogin,
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _handleLogin,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
-                        ),
-                      )
-                    : const Text('Login', style: TextStyle(fontSize: 18)),
+                        )
+                      : const Text('Login'),
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
               // Link ke Register
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Belum punya akun?'),
+                  Text(
+                    'Belum punya akun?',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   TextButton(
                     onPressed: _isLoading
                         ? null
@@ -188,13 +207,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             );
                           },
-                    child: Text(
-                      'Daftar di sini',
-                      style: TextStyle(color: Colors.blue.shade800),
-                    ),
+                    child: const Text('Daftar di sini'),
                   ),
                 ],
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

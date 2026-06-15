@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:autisme/pages/splash_screen.dart';
 import 'package:autisme/services/notification_service.dart';
+import 'package:autisme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Autisme App',
+      theme: AppTheme.lightTheme,
       home: const SplashScreen(),
     );
   }

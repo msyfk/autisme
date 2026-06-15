@@ -1,5 +1,7 @@
 // lib/pages/history_page.dart
 
+import 'package:autisme/theme.dart';
+import 'package:autisme/widgets/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:autisme/models/screening_history_model.dart';
 import 'package:autisme/services/history_service.dart';
@@ -46,13 +48,13 @@ class _HistoryPageState extends State<HistoryPage> {
   Color _getRiskColor(String riskLevel) {
     switch (riskLevel) {
       case 'Rendah':
-        return Colors.green;
+        return AppTheme.success;
       case 'Sedang':
-        return Colors.orange;
+        return AppTheme.detail;
       case 'Tinggi':
-        return Colors.red;
+        return AppTheme.error;
       default:
-        return Colors.grey;
+        return AppTheme.textSecondary;
     }
   }
 
@@ -69,7 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
       'Sep',
       'Okt',
       'Nov',
-      'Des'
+      'Des',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
@@ -77,6 +79,8 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.background,
+      appBar: AppBar(title: const Text('Riwayat Screening')),
       body: _buildBody(),
     );
   }
@@ -87,156 +91,159 @@ class _HistoryPageState extends State<HistoryPage> {
     }
 
     if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              'Gagal memuat riwayat',
-              style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-            ),
-            const SizedBox(height: 8),
-            Text(_error!, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadHistory,
-              child: const Text('Coba Lagi'),
-            )
-          ],
+      return _buildStateMessage(
+        icon: Icons.error_outline_rounded,
+        title: 'Gagal memuat riwayat',
+        message: _error!,
+        action: OutlinedButton(
+          onPressed: _loadHistory,
+          child: const Text('Coba Lagi'),
         ),
       );
     }
 
     if (_historyList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.history, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              'Belum ada riwayat screening',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Hasil screening Anda akan muncul di sini',
-              style: TextStyle(color: Colors.grey[500]),
-            )
-          ],
-        ),
+      return _buildStateMessage(
+        icon: Icons.history_rounded,
+        title: 'Belum ada riwayat',
+        message: 'Hasil screening Anda akan muncul di sini',
       );
     }
 
     return RefreshIndicator(
       onRefresh: _loadHistory,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
         itemCount: _historyList.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 14),
         itemBuilder: (context, index) {
           final history = _historyList[index];
           final color = _getRiskColor(history.result.riskLevel);
           final percentage = history.result.percentage;
 
-          return Card(
-            elevation: 2,
-            margin: const EdgeInsets.only(bottom: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DiagnosisResultPage(
-                      diagnosis: history.result,
-                      childAgeMonths: history.childAgeMonths,
-                    ),
+          return InkWell(
+            borderRadius: BorderRadius.circular(24),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DiagnosisResultPage(
+                    diagnosis: history.result,
+                    childAgeMonths: history.childAgeMonths,
                   ),
-                );
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+              );
+            },
+            child: AppSurfaceCard(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppIconBadge(
+                    icon: Icons.assignment_rounded,
+                    color: color,
+                    size: 48,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          _formatDate(history.createdAt),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Usia ${history.childAgeMonths} bulan',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ),
+                            Text(
+                              _formatDate(history.createdAt),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
-                            vertical: 4,
+                            vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: color),
+                            color: color.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(999),
                           ),
                           child: Text(
-                            history.result.riskLevel,
+                            'Risiko ${history.result.riskLevel}',
                             style: TextStyle(
                               color: color,
-                              fontWeight: FontWeight.bold,
                               fontSize: 12,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Skor: ${history.result.totalScore}/${history.result.maxScore}',
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              LinearProgressIndicator(
-                                value: percentage / 100,
-                                backgroundColor: Colors.grey[200],
-                                color: color,
-                                minHeight: 6,
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ],
+                        const SizedBox(height: 14),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(99),
+                          child: LinearProgressIndicator(
+                            value: percentage / 100,
+                            minHeight: 7,
+                            backgroundColor: AppTheme.background,
+                            color: color,
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey[400],
+                        const SizedBox(height: 8),
+                        Text(
+                          'Skor ${history.result.totalScore}',
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppTheme.textSecondary,
+                  ),
+                ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildStateMessage({
+    required IconData icon,
+    required String title,
+    required String message,
+    Widget? action,
+  }) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: AppSurfaceCard(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppIconBadge(icon: icon, size: 64),
+              const SizedBox(height: 18),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              if (action != null) ...[const SizedBox(height: 20), action],
+            ],
+          ),
+        ),
       ),
     );
   }

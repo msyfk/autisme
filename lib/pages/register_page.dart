@@ -98,10 +98,12 @@ class _RegisterPageState extends State<RegisterPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red.shade600 : Colors.green.shade600,
+        backgroundColor: isError
+            ? Theme.of(context).colorScheme.error
+            : Colors.green.shade600,
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -109,15 +111,11 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.blue.shade800),
-        title: Text(
-          'Buat Akun Baru',
-          style: TextStyle(color: Colors.blue.shade800),
-        ),
+        backgroundColor: Colors.transparent,
+        title: const Text('Buat Akun Baru'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -125,36 +123,44 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 24),
+              Text(
+                'Lengkapi Data Diri',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Daftar untuk memantau perkembangan anak',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 48),
 
               // Nama Lengkap
               TextField(
                 controller: _nameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nama Lengkap',
-                  prefixIcon: const Icon(Icons.person_outline),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  prefixIcon: Icon(Icons.person_outline),
                 ),
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Email
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Password
               TextField(
@@ -172,14 +178,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       setState(() => _obscurePassword = !_obscurePassword);
                     },
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                 ),
                 obscureText: _obscurePassword,
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Konfirmasi Password
               TextField(
@@ -200,59 +203,52 @@ class _RegisterPageState extends State<RegisterPage> {
                       );
                     },
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                 ),
                 obscureText: _obscureConfirmPassword,
                 enabled: !_isLoading,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
 
               // Tombol Register
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade800,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _isLoading ? null : _handleRegister,
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _handleRegister,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
-                        ),
-                      )
-                    : const Text('Register', style: TextStyle(fontSize: 18)),
+                        )
+                      : const Text('Register'),
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
               // Link ke Login
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Sudah punya akun?'),
+                  Text(
+                    'Sudah punya akun?',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   TextButton(
                     onPressed: _isLoading
                         ? null
                         : () {
                             Navigator.pop(context);
                           },
-                    child: Text(
-                      'Login di sini',
-                      style: TextStyle(color: Colors.blue.shade800),
-                    ),
+                    child: const Text('Login di sini'),
                   ),
                 ],
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

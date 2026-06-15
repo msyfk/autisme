@@ -4,6 +4,7 @@ import 'package:autisme/pages/home_page.dart';
 import 'package:autisme/pages/profile_page.dart';
 import 'package:autisme/pages/reminder_page.dart';
 import 'package:autisme/pages/history_page.dart';
+import 'package:autisme/theme.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -14,73 +15,71 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  int _selectedIndex = 0; // Indeks halaman yang sedang aktif
+  int _selectedIndex = 0;
 
-  // Daftar halaman yang akan ditampilkan di menu
   static const List<Widget> _pages = <Widget>[
-    HomePage(), // Indeks 0: Dashboard
-    ReminderPage(), // Indeks 1: Pengingat
-    HistoryPage(), // Indeks 2: Riwayat
-    ProfilePage(), // Indeks 3: Profil
-  ];
-
-  // Daftar judul untuk AppBar
-  static const List<String> _titles = <String>[
-    'Dashboard',
-    'Pengingat',
-    'Riwayat Screening',
-    'Profil',
+    HomePage(),
+    ReminderPage(),
+    HistoryPage(),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _selectedIndex = index);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Judul akan berubah sesuai halaman yang dipilih
-        title: Text(_titles[_selectedIndex]),
-        backgroundColor: Colors.blue.shade800,
-        foregroundColor: Colors.white,
-      ),
-      body: Center(
-        child: _pages.elementAt(
-          _selectedIndex,
-        ), // Tampilkan halaman yang dipilih
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
+      extendBody: true,
+      backgroundColor: AppTheme.background,
+      body: _pages.elementAt(_selectedIndex),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.96),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: AppTheme.detail.withValues(alpha: 0.22)),
+            boxShadow: AppTheme.softShadow,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_outlined),
-            activeIcon: Icon(Icons.notifications),
-            label: 'Pengingat',
+          child: BottomNavigationBar(
+            backgroundColor: Colors.transparent,
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            selectedItemColor: AppTheme.detail,
+            unselectedItemColor: AppTheme.textSecondary.withValues(alpha: 0.72),
+            selectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 11,
+            ),
+            type: BottomNavigationBarType.fixed,
+            elevation: 0,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications_active_rounded),
+                label: 'Pengingat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.history_rounded),
+                label: 'Riwayat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_rounded),
+                label: 'Profil',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_outlined),
-            activeIcon: Icon(Icons.history),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue.shade800,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        onTap: _onItemTapped, // Panggil fungsi saat item di-tap
+        ),
       ),
     );
   }
