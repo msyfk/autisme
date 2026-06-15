@@ -17,11 +17,11 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    HomePage(),
-    ReminderPage(),
-    HistoryPage(),
-    ProfilePage(),
+  List<Widget> get _pages => <Widget>[
+    HomePage(onOpenHistory: () => _onItemTapped(2)),
+    const ReminderPage(),
+    const HistoryPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

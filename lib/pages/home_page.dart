@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback? onOpenHistory;
+
+  const HomePage({super.key, this.onOpenHistory});
 
   void _showAgeDialog(BuildContext context) {
     final TextEditingController ageController = TextEditingController();
@@ -197,7 +199,7 @@ class HomePage extends StatelessWidget {
                       Icons.history_rounded,
                       'Riwayat',
                       'Lihat hasil lama',
-                      () {},
+                      onOpenHistory ?? () {},
                     ),
                   ),
                 ],
