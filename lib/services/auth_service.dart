@@ -1,6 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
+  static const String oauthRedirectUrl =
+      'com.example.autisme://login-callback/';
+
   final SupabaseClient _supabase = Supabase.instance.client;
 
   // Register dengan email dan password
@@ -27,6 +30,20 @@ class AuthService {
       password: password,
     );
     return response;
+  }
+
+  Future<bool> signInWithGoogle() {
+    return _supabase.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: oauthRedirectUrl,
+    );
+  }
+
+  Future<bool> signInWithFacebook() {
+    return _supabase.auth.signInWithOAuth(
+      OAuthProvider.facebook,
+      redirectTo: oauthRedirectUrl,
+    );
   }
 
   // Update user profile

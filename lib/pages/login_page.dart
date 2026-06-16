@@ -1,9 +1,13 @@
 // lib/pages/login_page.dart
 
+import 'dart:async';
+
 import 'package:autisme/pages/main_navigation.dart';
 import 'package:autisme/pages/register_page.dart';
 import 'package:autisme/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,11 +20,26 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
+  StreamSubscription<AuthState>? _authSubscription;
   bool _isLoading = false;
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    _authSubscription = _authService.authStateChanges.listen((data) {
+      if (data.session != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigation()),
+        );
+      }
+    });
+  }
+
+  @override
   void dispose() {
+    _authSubscription?.cancel();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -60,6 +79,22 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = 'Silakan verifikasi email Anda terlebih dahulu';
       }
       _showSnackBar(errorMessage, isError: true);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleSocialLogin(Future<bool> Function() signIn) async {
+    setState(() => _isLoading = true);
+    try {
+      final launched = await signIn();
+      if (!launched) {
+        _showSnackBar('Gagal membuka halaman login sosial', isError: true);
+      }
+    } catch (e) {
+      _showSnackBar('Login sosial gagal: ${e.toString()}', isError: true);
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -186,6 +221,30 @@ class _LoginPageState extends State<LoginPage> {
                       : const Text('Login'),
                 ),
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildMiniSocialButton(
+                    icon: FontAwesomeIcons.google,
+                    color: const Color(0xFFDB4437), // Google Red
+                    onPressed: _isLoading
+                        ? null
+                        : () =>
+                              _handleSocialLogin(_authService.signInWithGoogle),
+                  ),
+                  const SizedBox(width: 20),
+                  _buildMiniSocialButton(
+                    icon: FontAwesomeIcons.facebook,
+                    color: const Color(0xFF1877F2), // Facebook Blue
+                    onPressed: _isLoading
+                        ? null
+                        : () => _handleSocialLogin(
+                            _authService.signInWithFacebook,
+                          ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 24),
 
               // Link ke Register
@@ -215,6 +274,36 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMiniSocialButton({
+    required dynamic icon,
+    required Color color,
+    required VoidCallback? onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Center(child: FaIcon(icon, size: 28, color: color)),
       ),
     );
   }
