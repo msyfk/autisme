@@ -5,9 +5,15 @@ import 'package:autisme/models/in_app_notification_model.dart';
 import 'package:autisme/services/reminder_service.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class InAppNotificationController extends GetxController {
-  static const String _storageKey = 'in_app_notifications';
+  static const String _baseStorageKey = 'in_app_notifications';
+
+  String get _storageKey {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    return userId == null ? _baseStorageKey : '${_baseStorageKey}_$userId';
+  }
 
   final notifications = <InAppNotification>[].obs;
 
@@ -48,16 +54,12 @@ class InAppNotificationController extends GetxController {
                 'Sudah seminggu sejak screening terakhir. Yuk, pantau perkembangan anak Anda.',
           );
 
-          // Perbarui tanggal agar tidak terus ditambah
+          // Perbarui tanggal agar tidak terus ditambah.
+          // Gunakan service agar tersimpan pada key akun yang sedang login.
           final updatedSettings = settings.copyWith(
             nextReminderDate: settings.calculateNextReminderDate(),
           );
-          // Simpan langsung ke SharedPreferences agar tidak memicu ulang OS Schedule yang bisa menyebabkan error
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString(
-            'reminder_settings',
-            json.encode(updatedSettings.toMap()),
-          );
+          await reminderService.saveReminderSettings(updatedSettings);
         }
       }
     } catch (e) {

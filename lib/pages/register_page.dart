@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:autisme/pages/child_onboarding_page.dart';
 import 'package:autisme/pages/main_navigation.dart';
 import 'package:autisme/services/auth_service.dart';
+import 'package:autisme/widgets/google_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -271,8 +272,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildMiniSocialButton(
-                    icon: FontAwesomeIcons.google,
-                    color: const Color(0xFFDB4437), // Google Red
+                    child: const GoogleLogo(size: 28),
                     onPressed: _isLoading
                         ? null
                         : () =>
@@ -280,8 +280,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(width: 20),
                   _buildMiniSocialButton(
-                    icon: FontAwesomeIcons.facebook,
-                    color: const Color(0xFF1877F2), // Facebook Blue
+                    child: const FaIcon(
+                      FontAwesomeIcons.facebook,
+                      size: 28,
+                      color: Color(0xFF1877F2),
+                    ),
                     onPressed: _isLoading
                         ? null
                         : () => _handleSocialLogin(
@@ -319,8 +322,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildMiniSocialButton({
-    required dynamic icon,
-    required Color color,
+    required Widget child,
     required VoidCallback? onPressed,
   }) {
     return InkWell(
@@ -343,7 +345,7 @@ class _RegisterPageState extends State<RegisterPage> {
             color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
-        child: Center(child: FaIcon(icon, size: 28, color: color)),
+        child: Center(child: child),
       ),
     );
   }

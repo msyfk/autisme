@@ -3,13 +3,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:autisme/models/reminder_model.dart';
 import 'package:autisme/services/notification_service.dart';
 
 class ReminderService {
-  static const String _reminderKey = 'reminder_settings';
+  static const String _baseReminderKey = 'reminder_settings';
 
   final NotificationService _notificationService = NotificationService();
+
+  String get _reminderKey {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    return userId == null ? _baseReminderKey : '${_baseReminderKey}_$userId';
+  }
 
   // Ambil pengaturan pengingat dari SharedPreferences
   Future<ReminderSettings> getReminderSettings() async {
