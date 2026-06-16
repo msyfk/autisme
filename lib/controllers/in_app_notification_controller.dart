@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:autisme/models/in_app_notification_model.dart';
+import 'package:autisme/services/reminder_service.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,10 @@ class InAppNotificationController extends GetxController {
     _loadNotifications();
   }
 
+  void markAsReadAndSave() {
+    markAllAsRead();
+  }
+
   Future<void> _loadNotifications() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_storageKey);
@@ -29,12 +34,34 @@ class InAppNotificationController extends GetxController {
             ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     }
 
-    // Buat dummy notifikasi selamat datang jika kosong untuk keperluan pengujian
-    if (notifications.isEmpty) {
-      addNotification(
-        title: 'Selamat Datang! 🎉',
-        body: 'Terima kasih telah menggunakan aplikasi NeuroSense.',
-      );
+    // Sinkronisasi dengan jadwal pengingat OS
+    try {
+      final reminderService = ReminderService();
+      final settings = await reminderService.getReminderSettings();
+
+      if (settings.isEnabled && settings.nextReminderDate != null) {
+        if (DateTime.now().isAfter(settings.nextReminderDate!)) {
+          // Pengingat terpicu! Tambahkan ke kotak masuk
+          addNotification(
+            title: 'Waktunya Screening! 📋',
+            body:
+                'Sudah seminggu sejak screening terakhir. Yuk, pantau perkembangan anak Anda.',
+          );
+
+          // Perbarui tanggal agar tidak terus ditambah
+          final updatedSettings = settings.copyWith(
+            nextReminderDate: settings.calculateNextReminderDate(),
+          );
+          // Simpan langsung ke SharedPreferences agar tidak memicu ulang OS Schedule yang bisa menyebabkan error
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString(
+            'reminder_settings',
+            json.encode(updatedSettings.toMap()),
+          );
+        }
+      }
+    } catch (e) {
+      // Abaikan jika terjadi error saat sinkronisasi
     }
   }
 

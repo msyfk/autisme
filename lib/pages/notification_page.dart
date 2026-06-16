@@ -3,6 +3,7 @@
 import 'package:autisme/controllers/in_app_notification_controller.dart';
 import 'package:autisme/theme.dart';
 import 'package:autisme/widgets/app_ui.dart';
+import 'package:autisme/models/in_app_notification_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -16,17 +17,24 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final _notifController = Get.find<InAppNotificationController>();
+  late final List<InAppNotification> _displayList;
 
   @override
   void initState() {
     super.initState();
-    // Tandai semua dibaca ketika halaman ini ditutup
     timeago.setLocaleMessages('id', timeago.IdMessages());
+    // Copy the list to keep the UI red dots visible during this session
+    _displayList = List.from(_notifController.notifications);
+
+    // Langsung tandai semua sebagai telah dibaca di background
+    // agar jika user force close aplikasi, badge di home tidak kembali muncul
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notifController.markAllAsRead();
+    });
   }
 
   @override
   void dispose() {
-    _notifController.markAllAsRead();
     super.dispose();
   }
 
@@ -69,10 +77,10 @@ class _NotificationPageState extends State<NotificationPage> {
 
         return ListView.separated(
           padding: const EdgeInsets.all(16),
-          itemCount: _notifController.notifications.length,
+          itemCount: _displayList.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
-            final notif = _notifController.notifications[index];
+            final notif = _displayList[index];
             return AppSurfaceCard(
               padding: const EdgeInsets.all(16),
               withShadow: !notif.isRead, // shadow tipis jika belum dibaca
