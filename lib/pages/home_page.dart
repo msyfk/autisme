@@ -1,81 +1,44 @@
 // lib/pages/home_page.dart
+import 'package:autisme/pages/child_onboarding_page.dart';
 import 'package:autisme/pages/screening_page.dart';
+import 'package:autisme/services/auth_service.dart';
 import 'package:autisme/theme.dart';
 import 'package:autisme/widgets/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback? onOpenHistory;
 
-  const HomePage({super.key, this.onOpenHistory});
+  final _authService = AuthService();
 
-  void _showAgeDialog(BuildContext context) {
-    final TextEditingController ageController = TextEditingController();
+  HomePage({super.key, this.onOpenHistory});
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          title: const Text('Data Anak'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Masukkan usia anak dalam bulan.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: ageController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                  labelText: 'Usia (Bulan)',
-                  hintText: 'Misal: 24',
-                  prefixIcon: Icon(Icons.cake_rounded),
-                ),
-              ),
-            ],
-          ),
-          actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (ageController.text.isNotEmpty) {
-                  int age = int.parse(ageController.text);
-                  if (age < 1 || age > 72) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Usia harus antara 1 - 72 bulan'),
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                    );
-                    return;
-                  }
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ScreeningPage(childAgeMonths: age),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Mulai'),
-            ),
-          ],
-        );
-      },
+  void _startScreening(BuildContext context) {
+    final children = _authService.getChildren();
+    final primaryChild = children.isNotEmpty ? children.first : null;
+    final ageMonths = primaryChild == null
+        ? null
+        : _authService.getChildAgeMonths(primaryChild);
+
+    if (ageMonths == null || ageMonths < 1 || ageMonths > 72) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Lengkapi data usia anak terlebih dahulu'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ChildOnboardingPage()),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreeningPage(childAgeMonths: ageMonths),
+      ),
     );
   }
 
@@ -167,7 +130,7 @@ class HomePage extends StatelessWidget {
                           backgroundColor: AppTheme.textPrimary,
                           foregroundColor: Colors.white,
                         ),
-                        onPressed: () => _showAgeDialog(context),
+                        onPressed: () => _startScreening(context),
                         icon: const Icon(Icons.play_arrow_rounded),
                         label: const Text('Mulai Screening'),
                       ),
@@ -189,7 +152,7 @@ class HomePage extends StatelessWidget {
                       Icons.assignment_rounded,
                       'Screening',
                       'Mulai tes baru',
-                      () => _showAgeDialog(context),
+                      () => _startScreening(context),
                     ),
                   ),
                   const SizedBox(width: 14),

@@ -212,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    '${child['age_months'] ?? child['age'] ?? '-'} Bulan • ${child['gender'] == 'L'
+                                    '${_authService.getChildAgeMonths(child) ?? '-'} Bulan • ${child['gender'] == 'L'
                                         ? 'Laki-laki'
                                         : child['gender'] == 'P'
                                         ? 'Perempuan'

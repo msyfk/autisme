@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:autisme/pages/login_page.dart';
+import 'package:autisme/pages/child_onboarding_page.dart';
 import 'package:autisme/pages/main_navigation.dart';
 import 'package:autisme/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     _authSubscription = _authService.authStateChanges.listen((data) {
       if (data.session != null && mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainNavigation()),
-        );
+        _navigateAfterAuth();
       }
     });
   }
@@ -48,6 +45,17 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _navigateAfterAuth() {
+    final Widget nextPage = _authService.hasCompletedChildProfile
+        ? const MainNavigation()
+        : const ChildOnboardingPage();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => nextPage),
+    );
   }
 
   Future<void> _handleRegister() async {
@@ -81,20 +89,14 @@ class _RegisterPageState extends State<RegisterPage> {
         fullName: name,
       );
 
-      if (response.user != null) {
+      if (response.user != null && mounted) {
+        _showSnackBar(
+          'Registrasi berhasil! Silakan cek email untuk verifikasi.',
+          isError: false,
+        );
+        await Future.delayed(const Duration(seconds: 2));
         if (mounted) {
-          _showSnackBar(
-            'Registrasi berhasil! Silakan cek email untuk verifikasi.',
-            isError: false,
-          );
-          // Kembali ke halaman login setelah registrasi
-          await Future.delayed(const Duration(seconds: 2));
-          if (mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          }
+          _navigateAfterAuth();
         }
       }
     } catch (e) {

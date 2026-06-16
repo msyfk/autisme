@@ -135,7 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 _children.add({
                   'id': DateTime.now().millisecondsSinceEpoch.toString(),
                   'name': name,
-                  'age': age,
+                  'age_months': age,
                 });
               });
 
@@ -151,7 +151,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void _showEditChildDialog(int index) {
     final child = _children[index];
     final nameController = TextEditingController(text: child['name']);
-    final ageController = TextEditingController(text: child['age'].toString());
+    final ageController = TextEditingController(
+      text: (_authService.getChildAgeMonths(child) ?? '').toString(),
+    );
 
     showDialog(
       context: context,
@@ -219,7 +221,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 _children[index] = {
                   'id': child['id'],
                   'name': name,
-                  'age': age,
+                  'age_months': age,
+                  if (child['gender'] != null) 'gender': child['gender'],
                 };
               });
 
@@ -385,7 +388,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                           ),
                           subtitle: Text(
-                            '${child['age']} bulan',
+                            '${_authService.getChildAgeMonths(child) ?? '-'} bulan',
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           trailing: Icon(

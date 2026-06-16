@@ -4,8 +4,10 @@ import 'dart:async';
 import 'package:autisme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:autisme/pages/child_onboarding_page.dart';
 import 'package:autisme/pages/login_page.dart';
 import 'package:autisme/pages/main_navigation.dart';
+import 'package:autisme/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,12 +28,16 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     final session = Supabase.instance.client.auth.currentSession;
+    final authService = AuthService();
+    final Widget nextPage = session == null
+        ? const LoginPage()
+        : authService.hasCompletedChildProfile
+        ? const MainNavigation()
+        : const ChildOnboardingPage();
+
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) =>
-            session != null ? const MainNavigation() : const LoginPage(),
-      ),
+      MaterialPageRoute(builder: (context) => nextPage),
     );
   }
 

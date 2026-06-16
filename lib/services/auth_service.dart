@@ -67,6 +67,42 @@ class AuthService {
     return response;
   }
 
+  bool get hasCompletedChildProfile {
+    return getChildren().any((child) => getChildAgeMonths(child) != null);
+  }
+
+  int? getChildAgeMonths(Map<String, dynamic> child) {
+    final value = child['age_months'] ?? child['age'];
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  Future<UserResponse> savePrimaryChild({
+    required String name,
+    required int ageMonths,
+    String? gender,
+  }) {
+    final currentChildren = getChildren();
+    final child = {
+      'id': currentChildren.isNotEmpty
+          ? currentChildren.first['id']
+          : DateTime.now().millisecondsSinceEpoch.toString(),
+      'name': name,
+      'age_months': ageMonths,
+      if (gender != null && gender.isNotEmpty) 'gender': gender,
+    };
+
+    if (currentChildren.isEmpty) {
+      currentChildren.add(child);
+    } else {
+      currentChildren[0] = child;
+    }
+
+    return updateProfile(children: currentChildren);
+  }
+
   // Add a child
   Future<UserResponse> addChild({
     required String name,
@@ -76,7 +112,7 @@ class AuthService {
     final newChild = {
       'id': DateTime.now().millisecondsSinceEpoch.toString(),
       'name': name,
-      'age': age,
+      'age_months': age,
     };
     currentChildren.add(newChild);
 
@@ -94,7 +130,7 @@ class AuthService {
 
     if (index != -1) {
       if (name != null) currentChildren[index]['name'] = name;
-      if (age != null) currentChildren[index]['age'] = age;
+      if (age != null) currentChildren[index]['age_months'] = age;
     }
 
     return updateProfile(children: currentChildren);

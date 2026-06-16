@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:autisme/pages/child_onboarding_page.dart';
 import 'package:autisme/pages/main_navigation.dart';
 import 'package:autisme/pages/register_page.dart';
 import 'package:autisme/services/auth_service.dart';
@@ -29,10 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _authSubscription = _authService.authStateChanges.listen((data) {
       if (data.session != null && mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainNavigation()),
-        );
+        _navigateAfterAuth();
       }
     });
   }
@@ -43,6 +41,17 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _navigateAfterAuth() {
+    final Widget nextPage = _authService.hasCompletedChildProfile
+        ? const MainNavigation()
+        : const ChildOnboardingPage();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => nextPage),
+    );
   }
 
   Future<void> _handleLogin() async {
@@ -63,13 +72,8 @@ class _LoginPageState extends State<LoginPage> {
         password: password,
       );
 
-      if (response.user != null) {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MainNavigation()),
-          );
-        }
+      if (response.user != null && mounted) {
+        _navigateAfterAuth();
       }
     } catch (e) {
       String errorMessage = 'Login gagal';
