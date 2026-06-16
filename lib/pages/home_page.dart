@@ -1,7 +1,10 @@
 // lib/pages/home_page.dart
 import 'package:autisme/pages/child_onboarding_page.dart';
+import 'package:autisme/pages/notification_page.dart';
 import 'package:autisme/pages/screening_page.dart';
+import 'package:autisme/controllers/in_app_notification_controller.dart';
 import 'package:autisme/services/auth_service.dart';
+import 'package:get/get.dart';
 import 'package:autisme/theme.dart';
 import 'package:autisme/widgets/app_ui.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +13,7 @@ class HomePage extends StatelessWidget {
   final VoidCallback? onOpenHistory;
 
   final _authService = AuthService();
+  final _notifController = Get.put(InAppNotificationController());
 
   HomePage({super.key, this.onOpenHistory});
 
@@ -74,14 +78,32 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton.filled(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: AppTheme.textPrimary,
-                    ),
-                    icon: const Icon(Icons.notifications_none_rounded),
-                    onPressed: () {},
-                  ),
+                  Obx(() {
+                    final unreadCount = _notifController.unreadCount;
+                    return IconButton.filled(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppTheme.textPrimary,
+                      ),
+                      icon: unreadCount > 0
+                          ? Badge(
+                              backgroundColor: AppTheme.error,
+                              smallSize: 10,
+                              child: const Icon(
+                                Icons.notifications_none_rounded,
+                              ),
+                            )
+                          : const Icon(Icons.notifications_none_rounded),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationPage(),
+                          ),
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
               const SizedBox(height: 24),
