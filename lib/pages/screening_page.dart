@@ -44,44 +44,8 @@ class _ScreeningPageState extends State<ScreeningPage> {
         .where((q) => q.ageMonths <= widget.childAgeMonths)
         .toList();
 
-    List<ScreeningQuestion> selectedQuestions = [];
-
-    if (ageAppropriate.length <= 20) {
-      selectedQuestions = ageAppropriate;
-    } else {
-      Map<String, List<ScreeningQuestion>> groups = {};
-      for (var q in ageAppropriate) {
-        String key = "${q.aspect}-${q.section}";
-        if (!groups.containsKey(key)) {
-          groups[key] = [];
-        }
-        groups[key]!.add(q);
-      }
-
-      List<String> groupKeys = groups.keys.toList();
-      Set<int> selectedIds = {};
-
-      for (var key in groupKeys) {
-        if (selectedQuestions.length >= 20) break;
-        var groupQuestions = groups[key]!;
-        var q = groupQuestions[0];
-        selectedQuestions.add(q);
-        selectedIds.add(q.id);
-      }
-
-      if (selectedQuestions.length < 20) {
-        List<ScreeningQuestion> remaining = ageAppropriate
-            .where((q) => !selectedIds.contains(q.id))
-            .toList();
-
-        int slotsNeeded = 20 - selectedQuestions.length;
-        for (int i = 0; i < slotsNeeded && i < remaining.length; i++) {
-          selectedQuestions.add(remaining[i]);
-        }
-      }
-
-      selectedQuestions.sort((a, b) => a.id.compareTo(b.id));
-    }
+    List<ScreeningQuestion> selectedQuestions = ageAppropriate;
+    selectedQuestions.sort((a, b) => a.id.compareTo(b.id));
 
     setState(() {
       _filteredQuestions = selectedQuestions;
@@ -376,12 +340,17 @@ class _ScreeningPageState extends State<ScreeningPage> {
               border: Border(top: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Column(
-              children: question.options.map((option) {
-                final isSelected = _answers[question.id] == option.score;
+              children: question.options.asMap().entries.map((entry) {
+                final index = entry.key;
+                final option = entry.value;
+                // Skor dari opsi paling atas adalah 1, dan bertambah ke bawah (1-4)
+                final optionScore = index + 1;
+
+                final isSelected = _answers[question.id] == optionScore;
                 return InkWell(
                   onTap: () {
                     setState(() {
-                      _answers[question.id] = option.score;
+                      _answers[question.id] = optionScore;
                     });
                   },
                   child: Container(

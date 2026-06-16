@@ -28,10 +28,8 @@ class AIDiagnosisService {
         aspectScores[question.aspect] =
             (aspectScores[question.aspect] ?? 0) + score;
 
-        // Hitung max score untuk aspek ini
-        int maxScore = question.options
-            .map((o) => o.score)
-            .reduce((a, b) => a > b ? a : b);
+        // Hitung max score untuk aspek ini (maksimal skor adalah jumlah opsi, karena skor urut 1-4)
+        int maxScore = question.options.length;
         aspectMaxScores[question.aspect] =
             (aspectMaxScores[question.aspect] ?? 0) + maxScore;
       }
@@ -39,24 +37,36 @@ class AIDiagnosisService {
 
     // Total score
     int totalScore = answers.values.fold(0, (sum, item) => sum + item);
-    int maxScore = 0;
+    // Hitung S_min (Skor minimum = jumlah pertanyaan terjawab * 1)
+    int sMin = answers.length;
+
+    // Hitung S_maks (Skor maksimal = jumlah opsi pada masing-masing pertanyaan terjawab)
+    int sMax = 0;
     for (var question in questions) {
-      int qMaxScore = question.options
-          .map((o) => o.score)
-          .reduce((a, b) => a > b ? a : b);
-      maxScore += qMaxScore;
+      if (answers.containsKey(question.id)) {
+        sMax += question.options.length;
+      }
     }
 
-    // Tentukan risk level berdasarkan persentase
-    double percentage = (totalScore / maxScore) * 100;
+    // Hitung batas kuartil teoritis
+    double r = (sMax - sMin).toDouble();
+    double k1 = sMin + (0.25 * r);
+    double k2 = sMin + (0.50 * r);
+    double k3 = sMin + (0.75 * r);
+
+    // Tentukan kategori (Sangat Rendah, Rendah, Tinggi, Sangat Tinggi)
     String riskLevel;
-    if (percentage < 30) {
+    if (totalScore < k1) {
+      riskLevel = 'Sangat Rendah';
+    } else if (totalScore < k2) {
       riskLevel = 'Rendah';
-    } else if (percentage < 60) {
-      riskLevel = 'Sedang';
-    } else {
+    } else if (totalScore < k3) {
       riskLevel = 'Tinggi';
+    } else {
+      riskLevel = 'Sangat Tinggi';
     }
+
+    int maxScore = sMax;
 
     // Identifikasi aspek yang terpengaruh (skor > 50% dari max)
     List<String> affectedAspects = [];
@@ -171,41 +181,42 @@ Gunakan bahasa yang empatik, tidak menghakimi, dan memberikan harapan. Maksimal 
     List<String> affectedAspects,
   ) {
     // Rekomendasi fallback jika AI tidak tersedia
-    if (riskLevel == 'Rendah') {
+    if (riskLevel == 'Sangat Rendah') {
       return '''
-Hasil screening menunjukkan risiko rendah untuk gangguan spektrum autisme. Anak Anda menunjukkan perkembangan yang baik.
+Hasil screening menunjukkan sangat sedikit karakteristik perilaku yang berkaitan dengan ASD berdasarkan hasil screening.
 
 Rekomendasi:
 • Terus lakukan stimulasi perkembangan secara rutin
 • Pantau milestone perkembangan anak
-• Konsultasi rutin dengan dokter anak
-• Ciptakan lingkungan yang mendukung eksplorasi dan pembelajaran
-
-Ingat: Ini adalah screening awal. Jika Anda memiliki kekhawatiran khusus, konsultasikan dengan profesional.
+• Konsultasikan ke dokter anak saat jadwal imunisasi rutin
 ''';
-    } else if (riskLevel == 'Sedang') {
+    } else if (riskLevel == 'Rendah') {
       return '''
-Hasil screening menunjukkan beberapa area yang memerlukan perhatian lebih, terutama pada: ${affectedAspects.join(', ')}.
+Hasil screening menunjukkan sedikit karakteristik perilaku yang berkaitan dengan ASD berdasarkan hasil screening.
 
 Rekomendasi:
-• Konsultasikan hasil ini dengan dokter anak atau psikolog perkembangan
-• Lakukan observasi lebih detail pada area yang terpengaruh
-• Mulai intervensi dini jika disarankan oleh profesional
-• Bergabung dengan komunitas orang tua untuk dukungan
+• Berikan lebih banyak waktu bermain interaktif
+• Ajak anak berkomunikasi lebih sering
+• Lakukan pemantauan secara rutin
+''';
+    } else if (riskLevel == 'Tinggi') {
+      return '''
+Hasil screening menunjukkan cukup banyak karakteristik perilaku yang berkaitan dengan ASD. Disarankan dilakukan observasi dan pemantauan lebih lanjut.
 
-Tindakan dini sangat penting. Jangan ragu untuk mencari bantuan profesional.
+Rekomendasi:
+• Segera konsultasikan ke Dokter Spesialis Anak atau Psikolog Anak
+• Mulai cari informasi tentang intervensi dini
+• Fokus stimulasi pada aspek: ${affectedAspects.join(', ')}
 ''';
     } else {
+      // Sangat Tinggi
       return '''
-Hasil screening menunjukkan beberapa indikator yang memerlukan evaluasi profesional segera, khususnya pada: ${affectedAspects.join(', ')}.
+Hasil screening menunjukkan banyak karakteristik perilaku yang berkaitan dengan ASD berdasarkan hasil screening awal. Disarankan untuk berkonsultasi lebih lanjut dengan tenaga profesional seperti dokter spesialis anak, psikolog, atau psikiater anak untuk evaluasi lanjutan.
 
-Rekomendasi Penting:
-• SEGERA konsultasikan dengan dokter spesialis anak atau psikolog klinis
-• Minta rujukan untuk evaluasi diagnostik komprehensif
-• Dokumentasikan perilaku dan perkembangan anak
-• Cari informasi tentang layanan intervensi dini di daerah Anda
-
-Ingat: Screening ini bukan diagnosis final. Evaluasi profesional diperlukan untuk diagnosis yang akurat. Intervensi dini dapat membuat perbedaan signifikan.
+Rekomendasi:
+• Sangat disarankan untuk segera menemui profesional spesialis
+• Diperlukan evaluasi komprehensif sesegera mungkin
+• Persiapkan catatan perilaku anak yang Anda perhatikan
 ''';
     }
   }

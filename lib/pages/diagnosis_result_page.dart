@@ -32,11 +32,13 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
 
   Color _getRiskColor() {
     switch (diagnosis.riskLevel) {
-      case 'Rendah':
+      case 'Sangat Rendah':
         return Colors.green;
-      case 'Sedang':
-        return Colors.orange;
+      case 'Rendah':
+        return Colors.lightGreen;
       case 'Tinggi':
+        return Colors.orange;
+      case 'Sangat Tinggi':
         return Colors.red;
       default:
         return Colors.grey;
@@ -45,11 +47,12 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
 
   IconData _getRiskIcon() {
     switch (diagnosis.riskLevel) {
+      case 'Sangat Rendah':
       case 'Rendah':
         return Icons.check_circle_outline;
-      case 'Sedang':
-        return Icons.warning_amber_outlined;
       case 'Tinggi':
+        return Icons.warning_amber_outlined;
+      case 'Sangat Tinggi':
         return Icons.error_outline;
       default:
         return Icons.info_outline;
@@ -117,7 +120,7 @@ class _DiagnosisResultPageState extends State<DiagnosisResultPage> {
                         ),
                       ),
                       Text(
-                        ' / ${diagnosis.maxScore} Skor',
+                        ' / ${diagnosis.maxScore} Skor (${diagnosis.percentage.toStringAsFixed(1)}%)',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade600,

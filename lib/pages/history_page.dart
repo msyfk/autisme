@@ -47,12 +47,14 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Color _getRiskColor(String riskLevel) {
     switch (riskLevel) {
-      case 'Rendah':
+      case 'Sangat Rendah':
         return AppTheme.success;
-      case 'Sedang':
-        return AppTheme.detail;
+      case 'Rendah':
+        return Colors.lightGreen;
       case 'Tinggi':
-        return AppTheme.error;
+        return AppTheme.detail; // Orange
+      case 'Sangat Tinggi':
+        return AppTheme.error; // Red
       default:
         return AppTheme.textSecondary;
     }
@@ -193,7 +195,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Skor ${history.result.totalScore}',
+                          'Skor ${history.result.totalScore} / ${history.result.maxScore} (${percentage.toStringAsFixed(1)}%)',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
