@@ -45,6 +45,37 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
+  Future<void> _deleteHistory(String id, int index, ScreeningHistory deletedItem) async {
+    try {
+      await _historyService.deleteHistory(id);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Riwayat berhasil dihapus'),
+            backgroundColor: AppTheme.success,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } catch (e) {
+      // Kembalikan item ke list jika gagal menghapus di database
+      setState(() {
+        _historyList.insert(index, deletedItem);
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal menghapus: $e'),
+            backgroundColor: AppTheme.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    }
+  }
+
   Color _getRiskColor(String riskLevel) {
     switch (riskLevel) {
       case 'Sangat Rendah':
@@ -123,22 +154,76 @@ class _HistoryPageState extends State<HistoryPage> {
           final color = _getRiskColor(history.result.riskLevel);
           final percentage = history.result.percentage;
 
-          return InkWell(
-            borderRadius: BorderRadius.circular(24),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DiagnosisResultPage(
-                    diagnosis: history.result,
-                    childAgeMonths: history.childAgeMonths,
-                  ),
-                ),
+          return Dismissible(
+            key: Key(history.id ?? index.toString()),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 24),
+              decoration: BoxDecoration(
+                color: AppTheme.error,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+            confirmDismiss: (direction) async {
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Hapus Riwayat?'),
+                    content: const Text(
+                      'Tindakan ini tidak dapat dibatalkan. Riwayat screening ini akan dihapus secara permanen dari akun Anda.',
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Batal'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppTheme.error,
+                        ),
+                        child: const Text('Hapus'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
-            child: AppSurfaceCard(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            onDismissed: (direction) {
+              final deletedItem = _historyList[index];
+              setState(() {
+                _historyList.removeAt(index);
+              });
+              if (history.id != null) {
+                _deleteHistory(history.id!, index, deletedItem);
+              }
+            },
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DiagnosisResultPage(
+                      diagnosis: history.result,
+                      childAgeMonths: history.childAgeMonths,
+                    ),
+                  ),
+                );
+              },
+              child: AppSurfaceCard(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppIconBadge(
                     icon: Icons.assignment_rounded,
@@ -209,7 +294,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               ),
             ),
-          );
+          ));
         },
       ),
     );

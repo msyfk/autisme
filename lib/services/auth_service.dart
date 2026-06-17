@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
@@ -32,10 +34,29 @@ class AuthService {
     return response;
   }
 
-  Future<bool> signInWithGoogle() {
-    return _supabase.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: oauthRedirectUrl,
+  Future<AuthResponse> signInWithGoogle() async {
+    final googleSignIn = GoogleSignIn.instance;
+    final serverClientId = dotenv.env['GOOGLE_WEB_CLIENT_ID'];
+
+    await googleSignIn.initialize(serverClientId: serverClientId);
+
+    if (!googleSignIn.supportsAuthenticate()) {
+      throw const AuthException(
+        'Perangkat ini tidak mendukung Native Google Sign-In.',
+      );
+    }
+
+    final googleUser = await googleSignIn.authenticate();
+    final googleAuth = googleUser.authentication;
+    final idToken = googleAuth.idToken;
+
+    if (idToken == null) {
+      throw const AuthException('Google Sign-In gagal mendapatkan ID token.');
+    }
+
+    return _supabase.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
     );
   }
 
@@ -43,6 +64,7 @@ class AuthService {
     return _supabase.auth.signInWithOAuth(
       OAuthProvider.facebook,
       redirectTo: oauthRedirectUrl,
+      authScreenLaunchMode: LaunchMode.inAppBrowserView,
     );
   }
 

@@ -25,6 +25,10 @@ class _ProfilePageState extends State<ProfilePage> {
       _currentUser?.userMetadata?['full_name'] ?? 'Pengguna';
   String get _userEmail => _currentUser?.email ?? '-';
 
+  String? get _userAvatarUrl =>
+      _currentUser?.userMetadata?['avatar_url'] ??
+      _currentUser?.userMetadata?['picture'];
+
   String get _userInitials {
     final name = _userName;
     if (name.isEmpty || name == 'Pengguna') return 'U';
@@ -134,10 +138,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       border: Border.all(color: AppTheme.detail),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
-                      _userInitials,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: _userAvatarUrl != null && _userAvatarUrl!.isNotEmpty
+                        ? Image.network(
+                            _userAvatarUrl!,
+                            width: 84,
+                            height: 84,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Text(
+                              _userInitials,
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          )
+                        : Text(
+                            _userInitials,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
                   ),
                   const SizedBox(height: 16),
                   Text(

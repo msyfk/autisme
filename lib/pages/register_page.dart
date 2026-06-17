@@ -117,14 +117,18 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  Future<void> _handleSocialLogin(Future<bool> Function() signIn) async {
+  Future<void> _handleSocialLogin(Future<dynamic> Function() signIn) async {
     setState(() => _isLoading = true);
     try {
-      final launched = await signIn();
-      if (!launched) {
+      final result = await signIn();
+      if (result == false) {
         _showSnackBar('Gagal membuka halaman login sosial', isError: true);
       }
     } catch (e) {
+      // Abaikan error jika user sengaja membatalkan/menutup pop-up Google
+      if (e.toString().contains('canceled') || e.toString().contains('Cancelled by user')) {
+        return;
+      }
       _showSnackBar('Login sosial gagal: ${e.toString()}', isError: true);
     } finally {
       if (mounted) {
