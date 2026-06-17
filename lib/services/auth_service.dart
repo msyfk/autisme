@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
   static const String oauthRedirectUrl =
-      'com.example.autisme://login-callback/';
+      'com.musyaffak.neurosense://login-callback/';
 
   final SupabaseClient _supabase = Supabase.instance.client;
 

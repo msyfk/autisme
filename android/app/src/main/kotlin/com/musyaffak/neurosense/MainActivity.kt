@@ -1,4 +1,4 @@
-package com.example.autisme
+package com.musyaffak.neurosense
 
 import io.flutter.embedding.android.FlutterActivity
 
