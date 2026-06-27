@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:autisme/pages/child_onboarding_page.dart';
+import 'package:autisme/pages/login_page.dart';
 import 'package:autisme/pages/main_navigation.dart';
 import 'package:autisme/services/auth_service.dart';
 import 'package:autisme/widgets/google_logo.dart';
@@ -91,11 +92,22 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (response.user != null && mounted) {
-        _showSnackBar(
-          'Registrasi berhasil! Silakan cek email untuk verifikasi.',
-          isError: false,
-        );
-        await Future.delayed(const Duration(seconds: 2));
+        if (response.session == null) {
+          _showSnackBar(
+            'Registrasi berhasil! Silakan cek email untuk verifikasi, lalu login.',
+            isError: false,
+          );
+          await Future.delayed(const Duration(seconds: 2));
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+          return;
+        }
+
+        _showSnackBar('Registrasi berhasil!', isError: false);
+        await Future.delayed(const Duration(seconds: 1));
         if (mounted) {
           _navigateAfterAuth();
         }
@@ -126,7 +138,8 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } catch (e) {
       // Abaikan error jika user sengaja membatalkan/menutup pop-up Google
-      if (e.toString().contains('canceled') || e.toString().contains('Cancelled by user')) {
+      if (e.toString().contains('canceled') ||
+          e.toString().contains('Cancelled by user')) {
         return;
       }
       _showSnackBar('Login sosial gagal: ${e.toString()}', isError: true);

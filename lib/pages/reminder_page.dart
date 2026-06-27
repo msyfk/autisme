@@ -20,6 +20,7 @@ class _ReminderPageState extends State<ReminderPage> {
 
   ReminderSettings? _settings;
   bool _isLoading = true;
+  bool _isToggling = false;
 
   final List<Map<String, dynamic>> _days = [
     {'value': 1, 'name': 'Senin'},
@@ -46,24 +47,38 @@ class _ReminderPageState extends State<ReminderPage> {
   }
 
   Future<void> _toggleReminder(bool value) async {
-    if (value) {
-      final granted = await _notificationService.requestPermission();
-      if (!granted) {
-        if (mounted) {
+    final previousSettings = _settings;
+    if (previousSettings == null || _isToggling) return;
+
+    setState(() {
+      _isToggling = true;
+      _settings = previousSettings.copyWith(
+        isEnabled: value,
+        nextReminderDate: value
+            ? previousSettings.calculateNextReminderDate()
+            : null,
+      );
+    });
+
+    try {
+      if (value) {
+        final granted = await _notificationService.requestPermission();
+        if (!granted) {
+          if (!mounted) return;
+          setState(() => _settings = previousSettings);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Izin notifikasi diperlukan untuk pengingat'),
             ),
           );
+          return;
         }
-        return;
       }
-    }
 
-    final updatedSettings = await _reminderService.toggleReminder(value);
-    setState(() => _settings = updatedSettings);
+      final updatedSettings = await _reminderService.toggleReminder(value);
+      if (!mounted) return;
+      setState(() => _settings = updatedSettings);
 
-    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -71,6 +86,14 @@ class _ReminderPageState extends State<ReminderPage> {
           ),
         ),
       );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _settings = previousSettings);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengubah pengingat: ${e.toString()}')),
+      );
+    } finally {
+      if (mounted) setState(() => _isToggling = false);
     }
   }
 
@@ -166,7 +189,7 @@ class _ReminderPageState extends State<ReminderPage> {
                       _settings!.isEnabled ? 'Sedang aktif' : 'Dinonaktifkan',
                     ),
                     value: _settings!.isEnabled,
-                    onChanged: _toggleReminder,
+                    onChanged: _isToggling ? null : _toggleReminder,
                   ),
                   const Divider(),
                   ListTile(
