@@ -1,6 +1,7 @@
 // lib/services/notification_service.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -151,9 +152,12 @@ class NotificationService {
     debugPrint('Notifikasi dijadwalkan untuk: $scheduledDate');
   }
 
-  // Batalkan semua pengingat
   Future<void> cancelReminder() async {
-    await _notifications.cancel(0);
+    try {
+      await _notifications.cancel(0);
+    } on PlatformException catch (e) {
+      debugPrint('Gagal membatalkan cache pengingat lama: ${e.message}');
+    }
   }
 
   // Tampilkan notifikasi langsung (untuk testing)
